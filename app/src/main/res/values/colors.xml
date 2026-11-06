@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fly_brand">#7C5CFF</color>
+    <color name="fly_brand_dark">#5A3BE0</color>
+    <color name="fly_ink">#15151E</color>
+
+    <!-- Accents -->
+    <color name="accent_violet">#7C5CFF</color>
+    <color name="accent_azure">#2E8BFF</color>
+    <color name="accent_emerald">#16B364</color>
+    <color name="accent_amber">#F0A020</color>
+    <color name="accent_rose">#F0417A</color>
+    <color name="accent_citrine">#9DBE12</color>
+    <color name="accent_on">#FFFFFF</color>
+
+    <color name="accent_violet_container">#EDE9FE</color>
+    <color name="accent_violet_on_container">#3A2A78</color>
+    <color name="accent_azure_container">#E0EEFF</color>
+    <color name="accent_azure_on_container">#133B66</color>
+    <color name="accent_emerald_container">#DCF8E7</color>
+    <color name="accent_emerald_on_container">#0B4029</color>
+    <color name="accent_amber_container">#FFF0D4</color>
+    <color name="accent_amber_on_container">#4A3208</color>
+    <color name="accent_rose_container">#FFE1EA</color>
+    <color name="accent_rose_on_container">#571228</color>
+    <color name="accent_citrine_container">#F0F8CE</color>
+    <color name="accent_citrine_on_container">#3A4408</color>
+
+    <!-- Light surfaces -->
+    <color name="surface_light">#FAFAFC</color>
+    <color name="surface_container_light">#FFFFFF</color>
+    <color name="surface_container_high_light">#F1F1F7</color>
+    <color name="surface_variant_light">#EDEDF4</color>
+    <color name="on_surface_light">#15151E</color>
+    <color name="on_surface_variant_light">#5D5D72</color>
+    <color name="outline_light">#D5D5E2</color>
+    <color name="outline_variant_light">#E6E6EF</color>
+
+    <!-- Dark surfaces -->
+    <color name="surface_dark">#0E0E14</color>
+    <color name="surface_container_dark">#17171F</color>
+    <color name="surface_container_high_dark">#1F1F2A</color>
+    <color name="surface_variant_dark">#232330</color>
+    <color name="on_surface_dark">#F4F4FA</color>
+    <color name="on_surface_variant_dark">#A0A0B8</color>
+    <color name="outline_dark">#2E2E3E</color>
+    <color name="outline_variant_dark">#26262F</color>
+
+    <!-- AMOLED surfaces -->
+    <color name="surface_amoled">#000000</color>
+    <color name="surface_container_amoled">#0A0A0F</color>
+    <color name="surface_container_high_amoled">#121218</color>
+    <color name="surface_variant_amoled">#14141B</color>
+    <color name="on_surface_amoled">#F4F4FA</color>
+    <color name="on_surface_variant_amoled">#9A9AB0</color>
+    <color name="outline_amoled">#232330</color>
+    <color name="outline_variant_amoled">#1B1B24</color>
+
+    <color name="scrim_soft">#66000000</color>
+    <color name="launcher_background">#120A2A</color>
+</resources>

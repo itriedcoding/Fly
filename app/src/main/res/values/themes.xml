@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Fly.Base" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">?attr/colorSurface</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">@color/fly_brand</item>
+        <item name="colorSecondary">@color/fly_brand</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
+    </style>
+
+    <style name="Theme.Fly.Light" parent="Theme.Fly.Base">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="colorSurface">@color/surface_light</item>
+        <item name="colorSurfaceContainer">@color/surface_container_light</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_container_high_light</item>
+        <item name="colorSurfaceVariant">@color/surface_variant_light</item>
+        <item name="colorOnSurface">@color/on_surface_light</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant_light</item>
+        <item name="colorOutline">@color/outline_light</item>
+        <item name="colorOutlineVariant">@color/outline_variant_light</item>
+        <item name="android:colorBackground">@color/surface_light</item>
+        <item name="colorOnBackground">@color/on_surface_light</item>
+    </style>
+
+    <style name="Theme.Fly.Dark" parent="Theme.Fly.Base">
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="colorSurfaceContainer">@color/surface_container_dark</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_container_high_dark</item>
+        <item name="colorSurfaceVariant">@color/surface_variant_dark</item>
+        <item name="colorOnSurface">@color/on_surface_dark</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant_dark</item>
+        <item name="colorOutline">@color/outline_dark</item>
+        <item name="colorOutlineVariant">@color/outline_variant_dark</item>
+        <item name="android:colorBackground">@color/surface_dark</item>
+        <item name="colorOnBackground">@color/on_surface_dark</item>
+    </style>
+
+    <style name="Theme.Fly.Amoled" parent="Theme.Fly.Base">
+        <item name="colorSurface">@color/surface_amoled</item>
+        <item name="colorSurfaceContainer">@color/surface_container_amoled</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_container_high_amoled</item>
+        <item name="colorSurfaceVariant">@color/surface_variant_amoled</item>
+        <item name="colorOnSurface">@color/on_surface_amoled</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant_amoled</item>
+        <item name="colorOutline">@color/outline_amoled</item>
+        <item name="colorOutlineVariant">@color/outline_variant_amoled</item>
+        <item name="android:colorBackground">@color/surface_amoled</item>
+        <item name="colorOnBackground">@color/on_surface_amoled</item>
+    </style>
+
+    <!-- Accent overlays applied at runtime with Theme.applyStyle(). -->
+    <style name="ThemeOverlay.Fly.Violet" parent="">
+        <item name="colorPrimary">@color/accent_violet</item>
+        <item name="colorSecondary">@color/accent_violet</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_violet_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_violet_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_violet_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_violet_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Azure" parent="">
+        <item name="colorPrimary">@color/accent_azure</item>
+        <item name="colorSecondary">@color/accent_azure</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_azure_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_azure_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_azure_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_azure_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Emerald" parent="">
+        <item name="colorPrimary">@color/accent_emerald</item>
+        <item name="colorSecondary">@color/accent_emerald</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_emerald_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_emerald_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_emerald_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_emerald_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Amber" parent="">
+        <item name="colorPrimary">@color/accent_amber</item>
+        <item name="colorSecondary">@color/accent_amber</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_amber_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_amber_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_amber_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_amber_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Rose" parent="">
+        <item name="colorPrimary">@color/accent_rose</item>
+        <item name="colorSecondary">@color/accent_rose</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_rose_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_rose_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_rose_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_rose_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Citrine" parent="">
+        <item name="colorPrimary">@color/accent_citrine</item>
+        <item name="colorSecondary">@color/accent_citrine</item>
+        <item name="colorOnPrimary">@color/fly_ink</item>
+        <item name="colorOnSecondary">@color/fly_ink</item>
+        <item name="colorPrimaryContainer">@color/accent_citrine_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_citrine_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_citrine_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_citrine_on_container</item>
+    </style>
+
+    <!-- Reusable layout building blocks. -->
+    <style name="Fly.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">14dp</item>
+        <item name="cardCornerRadius">22dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Fly.Eyebrow" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Fly.Hero" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Fly.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Fly.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+    </style>
+
+    <style name="Fly.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Fly.Stat" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Fly.Section" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="Fly.Row" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Fly.PrimaryButton" parent="Widget.Material3.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <style name="Fly.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <style name="TextAppearance.Fly.Toolbar" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

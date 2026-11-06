@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/heroCard"
+            style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    style="@style/Fly.Eyebrow"
+                    android:text="@string/hero_eyebrow" />
+
+                <TextView
+                    style="@style/Fly.Hero"
+                    android:text="@string/hero_title" />
+
+                <TextView
+                    style="@style/Fly.Body"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/hero_subtitle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statApps"
+                            style="@style/Fly.Stat"
+                            android:text="—" />
+
+                        <TextView
+                            style="@style/Fly.Caption"
+                            android:text="@string/stat_apps_label" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statPacks"
+                            style="@style/Fly.Stat"
+                            android:text="—" />
+
+                        <TextView
+                            style="@style/Fly.Caption"
+                            android:text="@string/stat_packs_label" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/statWidgets"
+                            style="@style/Fly.Stat"
+                            android:text="—" />
+
+                        <TextView
+                            style="@style/Fly.Caption"
+                            android:text="@string/stat_widgets_label" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Fly.Section"
+                    android:text="@string/section_device" />
+
+                <TextView
+                    android:id="@+id/deviceModel"
+                    style="@style/Fly.Row"
+                    android:text="—" />
+
+                <TextView
+                    android:id="@+id/deviceAndroid"
+                    style="@style/Fly.Row"
+                    android:text="—" />
+
+                <TextView
+                    android:id="@+id/deviceDisplay"
+                    style="@style/Fly.Row"
+                    android:text="—" />
+
+                <TextView
+                    android:id="@+id/deviceLauncher"
+                    style="@style/Fly.Row"
+                    android:text="—" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Fly.Section"
+                    android:text="@string/section_actions" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOpenWallpapers"
+                        style="@style/Fly.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/action_wallpapers" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOpenThemes"
+                        style="@style/Fly.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/action_themes" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOpenStudio"
+                        style="@style/Fly.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/action_studio" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Fly.Section"
+                    android:text="@string/section_recent" />
+
+                <LinearLayout
+                    android:id="@+id/recentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/recentEmpty"
+                    style="@style/Fly.Body"
+                    android:text="@string/recent_empty" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Fly.Section"
+                    android:text="@string/section_engine" />
+
+                <TextView
+                    android:id="@+id/engineVersion"
+                    style="@style/Fly.Title"
+                    android:text="—" />
+
+                <TextView
+                    android:id="@+id/engineDetail"
+                    style="@style/Fly.Body"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
