@@ -16,6 +16,7 @@ namespace {
 constexpr int kMaxPalette = 8;
 constexpr int kBucketBits = 4;
 constexpr int kBucketCount = 1 << (kBucketBits * 3);
+constexpr float kTau = 6.28318531f;
 
 inline int channel(uint32_t argb, int shift) {
     return static_cast<int>((argb >> shift) & 0xFFu);
@@ -103,6 +104,112 @@ uint32_t sample_palette(const uint32_t *colors, int count, float position) {
     return fly_mix(colors[index], colors[index + 1], fraction);
 }
 
+/* Reads a jint[] palette into an opaque ARGB buffer. Returns the usable colour count. */
+int read_palette(JNIEnv *env, jintArray palette, uint32_t *colors) {
+    if (palette == nullptr) {
+        return 0;
+    }
+    const jsize length = env->GetArrayLength(palette);
+    const int count = length < kMaxPalette ? static_cast<int>(length) : kMaxPalette;
+    if (count <= 0) {
+        return 0;
+    }
+    jint *raw = env->GetIntArrayElements(palette, nullptr);
+    if (raw == nullptr) {
+        return 0;
+    }
+    for (int i = 0; i < count; ++i) {
+        colors[i] = opaque(static_cast<uint32_t>(raw[i]));
+    }
+    env->ReleaseIntArrayElements(palette, raw, JNI_ABORT);
+    return count;
+}
+
+/*
+ * Time-animated colour for one pixel. Styles mirror AnimatedWallpaperCatalog on the Kotlin side:
+ * 0 flowing curtains, 1 pulsing rings, 2 orbit, 3 plasma, 4 comet sweep, 5 caustics.
+ */
+uint32_t animated_pixel(const uint32_t *colors, int count, float fx, float fy, int style,
+                        float phase) {
+    float position = 0.0f;
+    float light = 0.0f;
+
+    switch (style) {
+        case 0: {
+            const float wave =
+                    std::sin(fy * 3.0f * kTau + phase * kTau + std::sin(fx * kTau) * 0.9f);
+            position = clamp01(0.34f + 0.30f * wave + fx * 0.30f);
+            light = 0.16f * std::sin(fx * 2.0f * kTau + phase * kTau * 1.5f);
+            break;
+        }
+        case 1: {
+            const float dx = fx - 0.5f;
+            const float dy = fy - 0.5f;
+            const float distance = std::sqrt(dx * dx + dy * dy);
+            const float rings = 0.5f + 0.5f * std::sin(distance * 17.0f - phase * 2.0f * kTau);
+            position = clamp01(distance * 1.45f + rings * 0.16f);
+            light = (rings - 0.5f) * 0.32f;
+            break;
+        }
+        case 2: {
+            const float angle = phase * kTau;
+            const float ax = 0.5f + 0.30f * std::cos(angle);
+            const float ay = 0.5f + 0.30f * std::sin(angle);
+            const float bx = 0.5f - 0.30f * std::cos(angle);
+            const float by = 0.5f - 0.30f * std::sin(angle);
+            const float dax = fx - ax;
+            const float day = fy - ay;
+            const float dbx = fx - bx;
+            const float dby = fy - by;
+            const float d1 = std::sqrt(dax * dax + day * day);
+            const float d2 = std::sqrt(dbx * dbx + dby * dby);
+            const float glowFirst = std::exp(-d1 * d1 * 26.0f);
+            const float glowSecond = std::exp(-d2 * d2 * 26.0f);
+            const float nearest = d1 < d2 ? d1 : d2;
+            position = clamp01(0.16f + 0.62f * (1.0f - std::exp(-nearest * 2.4f)));
+            light = glowFirst * 0.55f + glowSecond * 0.38f - 0.22f;
+            break;
+        }
+        case 3: {
+            const float value = std::sin(fx * 3.0f * kTau + phase * kTau) +
+                                std::sin(fy * 2.5f * kTau - phase * kTau) +
+                                std::sin((fx + fy) * 2.0f * kTau + phase * 0.5f * kTau);
+            position = clamp01(0.5f + value / 6.2f);
+            light = 0.10f * value;
+            break;
+        }
+        case 4: {
+            const float head = phase - std::floor(phase);
+            const float t = clamp01((fx * 0.55f + fy * 0.85f) / 1.40f);
+            float delta = t - head;
+            if (delta > 0.5f) {
+                delta -= 1.0f;
+            } else if (delta < -0.5f) {
+                delta += 1.0f;
+            }
+            const float band = std::exp(-(delta * delta) / 0.0020f);
+            position = clamp01(0.16f + t * 0.58f);
+            light = band * 0.75f - 0.10f;
+            break;
+        }
+        case 5:
+        default: {
+            const float first = std::sin((fx * 1.7f + fy * 1.1f) * kTau + phase * kTau);
+            const float second = std::sin((fx * -0.9f + fy * 1.8f) * kTau - phase * 0.8f * kTau);
+            const float ripple = (first + second) * 0.5f;
+            position = clamp01(0.5f + ripple * 0.40f + (fy - 0.5f) * 0.30f);
+            light = ripple * 0.20f;
+            break;
+        }
+    }
+
+    const uint32_t base = sample_palette(colors, count, position);
+    if (light >= 0.0f) {
+        return fly_mix(base, 0xFFFFFFFFu, clamp01(light) * 0.55f);
+    }
+    return fly_mix(base, 0xFF000000u, clamp01(-light) * 0.55f);
+}
+
 }  // namespace
 
 extern "C" {
@@ -147,6 +254,59 @@ Java_com_fly_customizer_util_NativeFly_generateGradient(JNIEnv *env, jobject /*t
         for (int x = 0; x < width; ++x) {
             const float position = gradient_position(x, y, width, height, style);
             const uint32_t base = sample_palette(colors, colorCount, position);
+            int noise = 0;
+            if (amplitude > 0) {
+                const uint32_t seed = static_cast<uint32_t>(y) * 73856093u ^
+                                      static_cast<uint32_t>(x) * 19349663u ^
+                                      static_cast<uint32_t>(amplitude) * 83492791u;
+                noise = fly_dither_offset(seed, amplitude);
+            }
+            const uint32_t shaded = pack_argb(255, channel(base, 16) + noise,
+                                              channel(base, 8) + noise, channel(base, 0) + noise);
+            destination[y * width + x] = static_cast<jint>(shaded);
+        }
+    }
+
+    env->ReleaseIntArrayElements(pixels, destination, 0);
+}
+
+/*
+ * Renders one animation frame. Phase is normalised by the caller; a full cycle is 1.0.
+ * Grain is seeded from the pixel coordinates so the dither pattern stays static between frames.
+ */
+JNIEXPORT void JNICALL
+Java_com_fly_customizer_util_NativeFly_generateFrame(JNIEnv *env, jobject /*thiz*/,
+                                                    jintArray pixels, jint width, jint height,
+                                                    jintArray palette, jint style, jint grain,
+                                                    jfloat phase) {
+    if (pixels == nullptr || width <= 0 || height <= 0) {
+        return;
+    }
+    if (env->GetArrayLength(pixels) < width * height) {
+        FLY_LOGE("frame buffer too small: %d < %d", env->GetArrayLength(pixels), width * height);
+        return;
+    }
+    uint32_t colors[kMaxPalette];
+    const int colorCount = read_palette(env, palette, colors);
+    if (colorCount <= 0) {
+        return;
+    }
+    jint *destination = env->GetIntArrayElements(pixels, nullptr);
+    if (destination == nullptr) {
+        return;
+    }
+
+    const int amplitude = fly_clamp_int(static_cast<int>(grain), 0, 24);
+    float wrapped = phase - std::floor(phase);
+    if (wrapped < 0.0f) {
+        wrapped += 1.0f;
+    }
+
+    for (int y = 0; y < height; ++y) {
+        const float fy = height > 1 ? static_cast<float>(y) / static_cast<float>(height - 1) : 0.0f;
+        for (int x = 0; x < width; ++x) {
+            const float fx = width > 1 ? static_cast<float>(x) / static_cast<float>(width - 1) : 0.0f;
+            const uint32_t base = animated_pixel(colors, colorCount, fx, fy, style, wrapped);
             int noise = 0;
             if (amplitude > 0) {
                 const uint32_t seed = static_cast<uint32_t>(y) * 73856093u ^
@@ -371,7 +531,7 @@ Java_com_fly_customizer_util_NativeFly_paletteHash(JNIEnv *env, jobject /*thiz*/
 
 JNIEXPORT jstring JNICALL
 Java_com_fly_customizer_util_NativeFly_version(JNIEnv *env, jobject /*thiz*/) {
-    return env->NewStringUTF("FlyCore 1.0 (C++17 + C11)");
+    return env->NewStringUTF("FlyCore 1.3 (C++17 + C11)");
 }
 
 }  // extern "C"

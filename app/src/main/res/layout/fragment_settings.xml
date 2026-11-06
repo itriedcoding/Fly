@@ -30,6 +30,57 @@
 
                 <TextView
                     style="@style/Fly.Section"
+                    android:text="@string/settings_motion" />
+
+                <TextView
+                    style="@style/Fly.Caption"
+                    android:text="@string/settings_motion_hint" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchReduceMotion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/motion_reduce" />
+
+                <TextView
+                    style="@style/Fly.Caption"
+                    android:text="@string/motion_reduce_hint" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchHaptics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/haptics" />
+
+                <TextView
+                    style="@style/Fly.Caption"
+                    android:text="@string/haptics_hint" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchCompact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/compact_grid" />
+
+                <TextView
+                    style="@style/Fly.Caption"
+                    android:text="@string/compact_grid_hint" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Fly.Section"
                     android:text="@string/settings_wallpaper" />
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
@@ -64,10 +115,90 @@
                         android:text="@string/target_lock" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
+                <TextView
+                    style="@style/Fly.Section"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_wallpaper_quality" />
+
+                <TextView
+                    style="@style/Fly.Caption"
+                    android:text="@string/settings_wallpaper_quality_hint" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/qualityGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnQualitySmall"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/quality_small" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnQualityBalanced"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/quality_balanced" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnQualityFull"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/quality_full" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <TextView
+                    style="@style/Fly.Section"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_live_fps" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/fpsGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFpsBattery"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/fps_battery" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFpsBalanced"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/fps_balanced" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFpsSmooth"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/fps_smooth" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnOpenThemes"
                     style="@style/Fly.OutlinedButton"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:text="@string/btn_open_themes" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -122,6 +253,17 @@
                         android:layout_weight="1"
                         android:text="@string/update_open_releases" />
                 </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchUpdateOnLaunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/check_updates_launch" />
+
+                <TextView
+                    style="@style/Fly.Caption"
+                    android:text="@string/check_updates_launch_hint" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -139,6 +281,15 @@
 
                 <TextView
                     android:id="@+id/txtDataSummary"
+                    style="@style/Fly.Body" />
+
+                <TextView
+                    style="@style/Fly.Section"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/settings_storage" />
+
+                <TextView
+                    android:id="@+id/txtStorageSummary"
                     style="@style/Fly.Body" />
 
                 <LinearLayout
@@ -163,11 +314,45 @@
                         android:text="@string/btn_clear_favorites" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnExportBackup"
+                        style="@style/Fly.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/backup_export" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnImportBackup"
+                        style="@style/Fly.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/backup_import" />
+                </LinearLayout>
+
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExportBackup"
+                    android:id="@+id/btnClearCustomIcons"
                     style="@style/Fly.OutlinedButton"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/btn_clear_custom_icons" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearPreviews"
+                    style="@style/Fly.OutlinedButton"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/btn_clear_previews" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnResetAll"
+                    style="@style/Fly.PrimaryButton"
                     android:layout_marginTop="12dp"
-                    android:text="@string/backup_export" />
+                    android:text="@string/btn_reset_all" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

@@ -54,6 +54,16 @@ class FlyRepository(context: Context) {
 
     fun pinnedWidgets(limit: Int = 10): List<PinnedWidget> = database.pinnedWidgets(limit)
 
+    fun addFavorite(presetId: String, hueShift: Float, label: String) =
+        database.addFavorite(presetId, hueShift, label)
+
+    fun addPinnedWidgetRecord(provider: String, label: String, pinnedAt: Long) =
+        database.insertPinnedWidgetRecord(provider, label, pinnedAt)
+
+    fun clearCustomIcons() = database.clearCustomIcons()
+
+    fun clearAllData() = database.clearAll()
+
     fun clearHistory() = database.clearHistory()
 
     fun clearFavorites() = database.clearFavorites()

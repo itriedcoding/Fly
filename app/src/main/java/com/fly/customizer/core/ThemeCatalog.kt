@@ -148,9 +148,41 @@ object ThemeCatalog {
             onContainerColor = 0xFF5A0D17.toInt(),
             overlayRes = R.style.ThemeOverlay_Fly_Crimson,
         ),
+        AccentSpec(
+            id = "indigo",
+            labelRes = R.string.accent_indigo,
+            color = 0xFF5A5AF0.toInt(),
+            containerColor = 0xFFE4E3FF.toInt(),
+            onContainerColor = 0xFF2E2A66.toInt(),
+            overlayRes = R.style.ThemeOverlay_Fly_Indigo,
+        ),
+        AccentSpec(
+            id = "mint",
+            labelRes = R.string.accent_mint,
+            color = 0xFF3ED9A4.toInt(),
+            containerColor = 0xFFD9FBEE.toInt(),
+            onContainerColor = 0xFF0B4A38.toInt(),
+            overlayRes = R.style.ThemeOverlay_Fly_Mint,
+        ),
+        AccentSpec(
+            id = "plum",
+            labelRes = R.string.accent_plum,
+            color = 0xFF9B3FB5.toInt(),
+            containerColor = 0xFFF3DCFA.toInt(),
+            onContainerColor = 0xFF45104F.toInt(),
+            overlayRes = R.style.ThemeOverlay_Fly_Plum,
+        ),
+        AccentSpec(
+            id = "copper",
+            labelRes = R.string.accent_copper,
+            color = 0xFFC97B3C.toInt(),
+            containerColor = 0xFFFBE6D4.toInt(),
+            onContainerColor = 0xFF4A2A08.toInt(),
+            overlayRes = R.style.ThemeOverlay_Fly_Copper,
+        ),
     )
 
-    /** Sixteen ready-made themes across all three base surfaces. */
+    /** Forty-four ready-made themes across all three base surfaces. */
     val stockThemes: List<ThemePreset> = listOf(
         ThemePreset("obsidian", R.string.theme_obsidian, BaseMode.AMOLED, "violet"),
         ThemePreset("midnight_ink", R.string.theme_midnight_ink, BaseMode.DARK, "azure"),
@@ -176,6 +208,26 @@ object ThemeCatalog {
         ThemePreset("vineyard", R.string.theme_vineyard, BaseMode.AMOLED, "rose"),
         ThemePreset("frost", R.string.theme_frost, BaseMode.LIGHT, "citrine"),
         ThemePreset("dusk", R.string.theme_dusk, BaseMode.DARK, "violet"),
+        ThemePreset("solar_flare", R.string.theme_solar_flare, BaseMode.AMOLED, "amber"),
+        ThemePreset("cobalt", R.string.theme_cobalt, BaseMode.AMOLED, "azure"),
+        ThemePreset("reactor", R.string.theme_reactor, BaseMode.AMOLED, "citrine"),
+        ThemePreset("indigo_noir", R.string.theme_indigo_noir, BaseMode.AMOLED, "indigo"),
+        ThemePreset("jade_noir", R.string.theme_jade_noir, BaseMode.AMOLED, "mint"),
+        ThemePreset("ember_noir", R.string.theme_ember_noir, BaseMode.AMOLED, "copper"),
+        ThemePreset("lava_noir", R.string.theme_lava_noir, BaseMode.AMOLED, "coral"),
+        ThemePreset("ruby_noir", R.string.theme_ruby_noir, BaseMode.AMOLED, "crimson"),
+        ThemePreset("velvet_noir", R.string.theme_velvet_noir, BaseMode.AMOLED, "plum"),
+        ThemePreset("indigo_dusk", R.string.theme_indigo_dusk, BaseMode.DARK, "indigo"),
+        ThemePreset("mint_shadow", R.string.theme_mint_shadow, BaseMode.DARK, "mint"),
+        ThemePreset("mulberry", R.string.theme_mulberry, BaseMode.DARK, "plum"),
+        ThemePreset("rust", R.string.theme_rust, BaseMode.DARK, "copper"),
+        ThemePreset("abyss", R.string.theme_abyss, BaseMode.DARK, "teal"),
+        ThemePreset("periwinkle", R.string.theme_periwinkle, BaseMode.LIGHT, "indigo"),
+        ThemePreset("terracotta", R.string.theme_terracotta, BaseMode.LIGHT, "copper"),
+        ThemePreset("seafoam", R.string.theme_seafoam, BaseMode.LIGHT, "mint"),
+        ThemePreset("sorbet", R.string.theme_sorbet, BaseMode.LIGHT, "coral"),
+        ThemePreset("cherry", R.string.theme_cherry, BaseMode.LIGHT, "crimson"),
+        ThemePreset("lilac", R.string.theme_lilac, BaseMode.LIGHT, "plum"),
     )
 
     fun accent(id: String?): AccentSpec = accents.firstOrNull { it.id == id } ?: accents.first()

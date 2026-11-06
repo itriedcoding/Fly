@@ -17,6 +17,11 @@
         android:layout_marginTop="6dp"
         android:text="@string/wallpapers_subtitle" />
 
+    <TextView
+        android:id="@+id/txtLiveStatus"
+        style="@style/Fly.Caption"
+        android:layout_marginTop="8dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,6 +55,7 @@
         android:layout_marginTop="4dp" />
 
     <TextView
+        android:id="@+id/applyTargetLabel"
         style="@style/Fly.Section"
         android:layout_marginTop="12dp"
         android:text="@string/apply_target_label" />
@@ -101,6 +107,15 @@
             android:checkable="true"
             android:text="@string/btn_favorites" />
 
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAnimated"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:checkable="true"
+            android:text="@string/btn_animated" />
+
         <TextView
             style="@style/Fly.Caption"
             android:layout_width="0dp"
@@ -116,6 +131,13 @@
         android:text="@string/wallpapers_empty_favorites"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/txtAnimatedCaption"
+        style="@style/Fly.Body"
+        android:layout_marginTop="10dp"
+        android:text="@string/live_section_hint"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wallpaperGrid"
         android:layout_width="match_parent"
@@ -124,5 +146,15 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingBottom="10dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/animatedGrid"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="10dp"
+        android:visibility="gone" />
 
 </LinearLayout>

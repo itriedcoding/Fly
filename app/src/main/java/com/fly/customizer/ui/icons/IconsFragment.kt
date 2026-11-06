@@ -72,7 +72,11 @@ class IconsFragment : Fragment() {
             onSelect = { app -> pinShortcut(app) },
             onLongPress = { app -> showAppOptions(app) },
         )
-        binding.appIconList.layoutManager = GridLayoutManager(requireContext(), 4)
+        val iconPrefs = FlyApp.prefs
+        appAdapter.compact = iconPrefs.compactIcons
+        appAdapter.haptics = iconPrefs.haptics
+        binding.appIconList.layoutManager =
+            GridLayoutManager(requireContext(), if (iconPrefs.compactIcons) 5 else 4)
         binding.appIconList.adapter = appAdapter
 
         binding.inputSearch.doAfterTextChanged { applySearchFilter() }

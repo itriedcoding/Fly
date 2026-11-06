@@ -8,6 +8,7 @@
     <string name="nav_icons">Icons</string>
     <string name="nav_widgets">Widgets</string>
     <string name="cd_settings">Settings</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Dashboard -->
     <string name="hero_eyebrow">Fly studio</string>
@@ -29,7 +30,7 @@
     <string name="action_wallpapers">Wallpapers</string>
     <string name="action_themes">Themes</string>
     <string name="action_studio">Animations</string>
-    <string name="engine_detail">Rendered by %1$s with %2$d presets on this device.</string>
+    <string name="engine_detail">Rendered by %1$s with %2$d static recipes and 6 animated styles on this device.</string>
     <string name="device_model_value">%1$s %2$s</string>
     <string name="device_android_value">%1$s (API %2$d)</string>
     <string name="device_display_value">%1$s · %2$s · %3$d dpi</string>
@@ -37,12 +38,13 @@
 
     <!-- Wallpapers -->
     <string name="wallpapers_title">Wallpaper studio</string>
-    <string name="wallpapers_subtitle">Eight generative recipes rendered by the native gradient engine. Tap a card to apply it.</string>
+    <string name="wallpapers_subtitle">Thirty static recipes and six animated ones, all rendered by the native gradient engine. Tap a card to apply it.</string>
     <string name="btn_remix">Remix hue</string>
     <string name="hue_shift_value">Hue shift %1$d°</string>
     <string name="target_both">Home + lock</string>
     <string name="target_home">Home screen</string>
     <string name="target_lock">Lock screen</string>
+    <string name="target_live">Live wallpaper</string>
     <string name="apply_target_label">Apply to</string>
     <string name="applied_toast">Wallpaper applied to %1$s</string>
     <string name="apply_failed">Android refused the wallpaper change</string>
@@ -140,20 +142,23 @@
     <string name="favorites_cleared">Favourites cleared</string>
     <string name="version_label">Version</string>
     <string name="native_label">Native engine</string>
-    <string name="about_body">Fly is a Kotlin, Java, XML, SQLite and C/C++ Android customization studio. All wallpapers are generated on device by libflycore.so — nothing is downloaded and no mock data is used.</string>
+    <string name="about_body">Fly is a Kotlin, Java, XML, SQLite and C/C++ Android customization studio. All wallpapers — static and animated — are generated on device by libflycore.so. Nothing is downloaded and no mock data is used.</string>
     <string name="btn_open_themes">Open theme studio</string>
     <string name="build_value">%1$s (%2$d)</string>
-    <!-- Extra accents -->
     <string name="accent_teal">Teal</string>
     <string name="accent_coral">Coral</string>
     <string name="accent_orchid">Orchid</string>
     <string name="accent_slate">Slate</string>
     <string name="accent_sand">Sand</string>
     <string name="accent_crimson">Crimson</string>
+    <string name="accent_indigo">Indigo</string>
+    <string name="accent_mint">Mint</string>
+    <string name="accent_plum">Plum</string>
+    <string name="accent_copper">Copper</string>
 
     <!-- Stock themes -->
     <string name="stock_themes_label">Stock themes</string>
-    <string name="stock_themes_hint">Sixteen ready-made combinations. Tap one to apply it instantly.</string>
+    <string name="stock_themes_hint">Forty-four ready-made combinations. Tap one to apply it instantly.</string>
     <string name="stock_theme_applied">%1$s applied</string>
     <string name="theme_obsidian">Obsidian</string>
     <string name="theme_midnight_ink">Midnight ink</string>
@@ -197,12 +202,37 @@
     <!-- Wallpaper extras -->
     <string name="btn_shuffle">Shuffle</string>
     <string name="btn_favorites">Favourites</string>
+    <string name="btn_animated">Animated</string>
     <string name="hint_long_press_save">Long-press a wallpaper to save it to Pictures/Fly.</string>
     <string name="saved_to_gallery">Saved to Pictures/Fly</string>
     <string name="save_failed">Could not save the wallpaper</string>
     <string name="save_needs_android10">Saving to the gallery needs Android 10 or newer</string>
     <string name="shuffled_to">Shuffled to %1$s</string>
     <string name="wallpapers_empty_favorites">No favourites yet — tap the star on any wallpaper.</string>
+
+    <!-- Animated wallpapers -->
+    <string name="live_drift_aurora">Aurora drift</string>
+    <string name="live_pulse_rings">Pulse rings</string>
+    <string name="live_orbit">Orbit</string>
+    <string name="live_plasma_tide">Plasma tide</string>
+    <string name="live_comet_sweep">Comet sweep</string>
+    <string name="live_caustics">Caustics</string>
+    <string name="live_badge">LIVE</string>
+    <string name="live_active">IN USE</string>
+    <string name="live_meta">%1$s · %2$ds loop</string>
+    <string name="live_section_title">Animated wallpapers</string>
+    <string name="live_section_hint">These run as a real live wallpaper through FlyWallpaperService, rendered frame by frame by libflycore.so.</string>
+    <string name="live_set_title">Set live wallpaper</string>
+    <string name="live_set_message">Android will open a preview of %1$s. Tap \"Set wallpaper\" there to install it on your home screen.</string>
+    <string name="live_set_confirm">Open preview</string>
+    <string name="live_preview_opened">Confirm the wallpaper in the system preview</string>
+    <string name="live_chooser">Choose Fly in the live wallpaper picker</string>
+    <string name="live_running">Live wallpaper running: %1$s</string>
+    <string name="live_not_running">No Fly live wallpaper is active</string>
+    <string name="live_unsupported">This device does not support live wallpapers</string>
+    <string name="live_failed">Could not open the live wallpaper picker</string>
+    <string name="live_wallpaper_description">Animated gradients rendered on device by Fly.</string>
+    <string name="section_live_wallpaper">Live wallpaper</string>
 
     <!-- Icon search -->
     <string name="search_apps_hint">Search apps</string>
@@ -228,6 +258,22 @@
     <string name="wallpaper_nebula">Nebula</string>
     <string name="wallpaper_moss">Moss</string>
     <string name="wallpaper_horizon">Horizon</string>
+    <string name="wallpaper_sorbet">Sorbet</string>
+    <string name="wallpaper_onyx">Onyx</string>
+    <string name="wallpaper_orchid_bloom">Orchid bloom</string>
+    <string name="wallpaper_sage">Sage</string>
+    <string name="wallpaper_tangerine">Tangerine</string>
+    <string name="wallpaper_cobalt">Cobalt</string>
+    <string name="wallpaper_bubblegum">Bubblegum</string>
+    <string name="wallpaper_forest">Forest</string>
+    <string name="wallpaper_wine">Wine</string>
+    <string name="wallpaper_arctic">Arctic</string>
+    <string name="wallpaper_sepia">Sepia</string>
+    <string name="wallpaper_electric">Electric</string>
+    <string name="wallpaper_peach">Peach</string>
+    <string name="wallpaper_indigo_night">Indigo night</string>
+    <string name="wallpaper_pistachio">Pistachio</string>
+    <string name="wallpaper_storm">Storm</string>
 
     <!-- Extra stock themes -->
     <string name="theme_graphite">Graphite</string>
@@ -238,6 +284,26 @@
     <string name="theme_vineyard">Vineyard</string>
     <string name="theme_frost">Frost</string>
     <string name="theme_dusk">Dusk</string>
+    <string name="theme_solar_flare">Solar flare</string>
+    <string name="theme_cobalt">Cobalt</string>
+    <string name="theme_reactor">Reactor</string>
+    <string name="theme_indigo_noir">Indigo noir</string>
+    <string name="theme_jade_noir">Jade noir</string>
+    <string name="theme_ember_noir">Ember noir</string>
+    <string name="theme_lava_noir">Lava noir</string>
+    <string name="theme_ruby_noir">Ruby noir</string>
+    <string name="theme_velvet_noir">Velvet noir</string>
+    <string name="theme_indigo_dusk">Indigo dusk</string>
+    <string name="theme_mint_shadow">Mint shadow</string>
+    <string name="theme_mulberry">Mulberry</string>
+    <string name="theme_rust">Rust</string>
+    <string name="theme_abyss">Abyss</string>
+    <string name="theme_periwinkle">Periwinkle</string>
+    <string name="theme_terracotta">Terracotta</string>
+    <string name="theme_seafoam">Seafoam</string>
+    <string name="theme_sorbet">Sorbet</string>
+    <string name="theme_cherry">Cherry</string>
+    <string name="theme_lilac">Lilac</string>
 
     <!-- Custom icons -->
     <string name="custom_icon_set">Set custom icon</string>
@@ -246,6 +312,7 @@
     <string name="custom_icon_failed">That image could not be used</string>
     <string name="custom_icon_removed">Custom icon removed for %1$s</string>
     <string name="pin_shortcut">Pin shortcut</string>
+
     <!-- Widgets -->
     <string name="widget_pinned_toast">%1$s pinned to your home screen</string>
     <string name="widgets_active">%1$d on home</string>
@@ -264,4 +331,42 @@
     <string name="backup_saved">Backup written to Downloads/Fly</string>
     <string name="backup_failed">Could not write the backup</string>
     <string name="backup_needs_android10">Exporting needs Android 10 or newer</string>
+    <string name="backup_import">Import backup</string>
+    <string name="backup_imported">Restored %1$d themes, %2$d favourites, %3$d icons and %4$d widgets</string>
+    <string name="backup_import_failed">That file is not a Fly backup</string>
+    <string name="backup_import_empty">Nothing to restore in that backup</string>
+
+    <!-- Settings: motion, rendering, storage -->
+    <string name="settings_motion">Motion &amp; feedback</string>
+    <string name="settings_motion_hint">Animation playback and touch feedback across the app and the live wallpaper.</string>
+    <string name="motion_reduce">Reduce motion</string>
+    <string name="motion_reduce_hint">Freeze animated previews and hold a single live wallpaper frame</string>
+    <string name="haptics">Haptic feedback</string>
+    <string name="haptics_hint">Vibrate on long-press in the icon grid</string>
+    <string name="compact_grid">Compact app grid</string>
+    <string name="compact_grid_hint">Five columns with smaller icons instead of four</string>
+    <string name="settings_wallpaper_quality">Wallpaper rendering</string>
+    <string name="settings_wallpaper_quality_hint">Controls the resolution used when generating wallpapers and live frames.</string>
+    <string name="quality_small">Small</string>
+    <string name="quality_balanced">Balanced</string>
+    <string name="quality_full">Full</string>
+    <string name="settings_live_fps">Live wallpaper frame rate</string>
+    <string name="fps_battery">Battery</string>
+    <string name="fps_balanced">Balanced</string>
+    <string name="fps_smooth">Smooth</string>
+    <string name="settings_launch">On launch</string>
+    <string name="check_updates_launch">Check for updates when Fly opens</string>
+    <string name="check_updates_launch_hint">Uses the GitHub releases API over the network</string>
+    <string name="settings_storage">Storage</string>
+    <string name="storage_summary">%1$s used by Fly · %2$d custom icons</string>
+    <string name="btn_clear_custom_icons">Remove custom icons</string>
+    <string name="custom_icons_cleared">%1$d custom icons removed</string>
+    <string name="custom_icons_none">There are no custom icons to remove</string>
+    <string name="btn_reset_all">Reset everything</string>
+    <string name="reset_all_title">Reset Fly?</string>
+    <string name="reset_all_message">This deletes your saved themes, favourites, history, custom icons, pinned widget records and every setting. It cannot be undone.</string>
+    <string name="reset_all_confirm">Delete everything</string>
+    <string name="reset_done">Fly was reset to its defaults</string>
+    <string name="btn_clear_previews">Clear preview cache</string>
+    <string name="previews_cleared">Preview cache cleared</string>
 </resources>

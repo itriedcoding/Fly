@@ -13,9 +13,13 @@ import com.fly.customizer.FlyApp
 import com.fly.customizer.R
 import com.fly.customizer.core.Prefs
 import com.fly.customizer.databinding.FragmentWallpapersBinding
+import com.fly.customizer.util.AnimatedWallpaper
+import com.fly.customizer.util.AnimatedWallpaperCatalog
+import com.fly.customizer.util.LiveWallpaperController
 import com.fly.customizer.util.ThumbnailCache
 import com.fly.customizer.util.WallpaperPreset
 import com.fly.customizer.util.WallpaperStudio
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,7 +27,8 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /**
- * Wallpaper studio: apply, remix, shuffle, gallery export and favourites.
+ * Wallpaper studio: static recipes (apply, remix, shuffle, gallery export, favourites) plus the
+ * animated catalogue that installs a real live wallpaper.
  */
 class WallpapersFragment : Fragment() {
 
@@ -32,10 +37,12 @@ class WallpapersFragment : Fragment() {
 
     private lateinit var prefs: Prefs
     private lateinit var adapter: WallpaperAdapter
+    private lateinit var animatedAdapter: AnimatedWallpaperAdapter
     private var hueShift = 0f
     private var applying = false
     private var lastAppliedId: String? = null
     private var favorites: Set<String> = emptySet()
+    private var suppressFilters = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +68,12 @@ class WallpapersFragment : Fragment() {
         )
         binding.wallpaperGrid.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.wallpaperGrid.adapter = adapter
+
+        animatedAdapter = AnimatedWallpaperAdapter { preset -> confirmLiveWallpaper(preset) }
+        binding.animatedGrid.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.animatedGrid.adapter = animatedAdapter
+        animatedAdapter.submit(AnimatedWallpaperCatalog.presets, activeLiveId())
+
         refreshGrid()
 
         binding.targetGroup.check(
@@ -88,9 +101,67 @@ class WallpapersFragment : Fragment() {
         }
 
         binding.btnShuffle.setOnClickListener { shuffle() }
-        binding.chipFavorites.setOnCheckedChangeListener { _, _ -> refreshGrid() }
+
+        binding.chipAnimated.setOnCheckedChangeListener { _, checked ->
+            if (checked && binding.chipFavorites.isChecked) {
+                suppressFilters = true
+                binding.chipFavorites.isChecked = false
+                suppressFilters = false
+            }
+            updateFilterState()
+        }
+        binding.chipFavorites.setOnCheckedChangeListener { _, checked ->
+            if (checked && binding.chipAnimated.isChecked) {
+                suppressFilters = true
+                binding.chipAnimated.isChecked = false
+                suppressFilters = false
+            }
+            updateFilterState()
+        }
 
         updateHueLabel()
+        updateFilterState()
+        refreshLiveStatus()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (_binding != null) {
+            animatedAdapter.submit(AnimatedWallpaperCatalog.presets, activeLiveId())
+            refreshLiveStatus()
+        }
+    }
+
+    private fun activeLiveId(): String? =
+        if (LiveWallpaperController.isRunning(requireContext())) prefs.liveWallpaperId else null
+
+    private fun refreshLiveStatus() {
+        val running = LiveWallpaperController.isRunning(requireContext())
+        val preset = AnimatedWallpaperCatalog.presetOrDefault(prefs.liveWallpaperId)
+        binding.txtLiveStatus.text = if (running) {
+            getString(R.string.live_running, getString(preset.labelRes))
+        } else {
+            getString(R.string.live_not_running)
+        }
+    }
+
+    private fun updateFilterState() {
+        val animated = binding.chipAnimated.isChecked
+        binding.wallpaperGrid.isVisible = !animated
+        binding.animatedGrid.isVisible = animated
+        binding.txtAnimatedCaption.isVisible = animated
+        binding.btnRemix.isVisible = !animated
+        binding.btnShuffle.isVisible = !animated
+        binding.txtHueShift.isVisible = !animated
+        binding.applyTargetLabel.isVisible = !animated
+        binding.targetGroup.isVisible = !animated
+        binding.chipFavorites.isEnabled = !animated
+        if (animated) {
+            binding.txtWallpapersEmpty.isVisible = false
+            animatedAdapter.submit(AnimatedWallpaperCatalog.presets, activeLiveId())
+        } else {
+            refreshGrid()
+        }
     }
 
     private fun updateHueLabel() {
@@ -104,7 +175,33 @@ class WallpapersFragment : Fragment() {
             WallpaperStudio.presets
         }
         adapter.submit(presets, hueShift, favorites)
-        binding.txtWallpapersEmpty.isVisible = presets.isEmpty()
+        if (!binding.chipAnimated.isChecked) {
+            binding.txtWallpapersEmpty.isVisible = presets.isEmpty()
+        }
+    }
+
+    private fun confirmLiveWallpaper(preset: AnimatedWallpaper) {
+        if (!isAdded) return
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.live_set_title)
+            .setMessage(getString(R.string.live_set_message, getString(preset.labelRes)))
+            .setPositiveButton(R.string.live_set_confirm) { _, _ -> launchLiveWallpaper(preset) }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun launchLiveWallpaper(preset: AnimatedWallpaper) {
+        prefs.liveWallpaperId = preset.id
+        val result = LiveWallpaperController.apply(requireActivity(), preset)
+        val message = when (result) {
+            LiveWallpaperController.Result.LAUNCHED -> R.string.live_preview_opened
+            LiveWallpaperController.Result.CHOOSER -> R.string.live_chooser
+            LiveWallpaperController.Result.UNSUPPORTED -> R.string.live_unsupported
+            LiveWallpaperController.Result.FAILED -> R.string.live_failed
+        }
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        animatedAdapter.submit(AnimatedWallpaperCatalog.presets, activeLiveId())
+        refreshLiveStatus()
     }
 
     private fun applyWallpaper(preset: WallpaperPreset) {

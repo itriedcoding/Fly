@@ -90,6 +90,58 @@ object CustomIconStore {
         }
     }
 
+    /** Raw PNG bytes of a stored icon, used by the backup exporter. */
+    fun readBytes(path: String): ByteArray? = try {
+        val file = File(path)
+        if (!file.exists()) null else file.readBytes()
+    } catch (error: Exception) {
+        Log.w(TAG, "Unable to read custom icon", error)
+        null
+    }
+
+    /**
+     * Restores a custom icon from backup bytes. The image is decoded and re-encoded so a corrupt or
+     * oversized payload cannot be written into the icon folder.
+     */
+    fun saveBytes(context: Context, component: String, bytes: ByteArray): String? {
+        return try {
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+            val options = BitmapFactory.Options().apply {
+                inSampleSize = sampleSize(bounds.outWidth, bounds.outHeight, MAX_STORED)
+            }
+            val decoded = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options) ?: return null
+            val scaled = if (decoded.width > MAX_STORED || decoded.height > MAX_STORED) {
+                val ratio = MAX_STORED.toFloat() / maxOf(decoded.width, decoded.height)
+                Bitmap.createScaledBitmap(
+                    decoded,
+                    (decoded.width * ratio).toInt().coerceAtLeast(1),
+                    (decoded.height * ratio).toInt().coerceAtLeast(1),
+                    true,
+                )
+            } else {
+                decoded
+            }
+            val folder = File(context.filesDir, FOLDER).apply { mkdirs() }
+            val target = File(folder, fileName(component))
+            FileOutputStream(target).use { output ->
+                if (!scaled.compress(Bitmap.CompressFormat.PNG, 100, output)) {
+                    return null
+                }
+            }
+            if (scaled !== decoded) decoded.recycle()
+            scaled.recycle()
+            target.absolutePath
+        } catch (error: Exception) {
+            Log.e(TAG, "Unable to restore custom icon", error)
+            null
+        } catch (error: OutOfMemoryError) {
+            Log.e(TAG, "Restored icon too large", error)
+            null
+        }
+    }
+
     private fun sampleSize(width: Int, height: Int, target: Int): Int {
         var sample = 1
         var longest = maxOf(width, height)

@@ -220,6 +220,51 @@ class FlyDatabase(context: Context) : SQLiteOpenHelper(context.applicationContex
         writableDatabase.insert("pinned_widgets", null, values)
     }
 
+    /** Restores a pinned widget record from a backup, keeping its original timestamp. */
+    fun insertPinnedWidgetRecord(provider: String, label: String, pinnedAt: Long) {
+        val values = ContentValues().apply {
+            put("provider", provider)
+            put("label", label)
+            put("widget_id", -1)
+            put("pinned_at", pinnedAt)
+        }
+        writableDatabase.insert("pinned_widgets", null, values)
+    }
+
+    /** Restores a favourite from a backup; duplicate preset/hue pairs are ignored. */
+    fun addFavorite(presetId: String, hueShift: Float, label: String) {
+        val values = ContentValues().apply {
+            put("preset_id", presetId)
+            put("hue_shift", hueShift)
+            put("label", label)
+            put("created_at", System.currentTimeMillis())
+        }
+        writableDatabase.insertWithOnConflict(
+            "favorite_wallpapers", null, values, SQLiteDatabase.CONFLICT_IGNORE
+        )
+    }
+
+    fun clearCustomIcons() {
+        writableDatabase.delete("custom_icons", null, null)
+    }
+
+    /** Deletes every row while keeping the schema, used by the reset action. */
+    fun clearAll() {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            db.delete("apply_history", null, null)
+            db.delete("favorite_wallpapers", null, null)
+            db.delete("custom_themes", null, null)
+            db.delete("icon_pack_usage", null, null)
+            db.delete("custom_icons", null, null)
+            db.delete("pinned_widgets", null, null)
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
     fun pinnedWidgetCount(): Int = scalarCount("SELECT COUNT(*) FROM pinned_widgets")
 
     fun pinnedWidgets(limit: Int): List<PinnedWidget> {

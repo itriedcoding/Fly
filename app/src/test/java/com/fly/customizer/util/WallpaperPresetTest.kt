@@ -10,7 +10,7 @@ class WallpaperPresetTest {
     fun presetIdsAreUnique() {
         val ids = WallpaperStudio.presets.map { it.id }
         assertEquals(ids.size, ids.toSet().size)
-        assertTrue("expected at least 14 presets", ids.size >= 14)
+        assertTrue("expected at least 30 presets", ids.size >= 30)
     }
 
     @Test

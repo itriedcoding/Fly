@@ -16,7 +16,9 @@ import com.fly.customizer.databinding.FragmentHomeBinding
 import com.fly.customizer.databinding.ItemHistoryBinding
 import com.fly.customizer.ui.MainActivity
 import com.fly.customizer.ui.animations.AnimationsFragment
+import com.fly.customizer.util.AnimatedWallpaperCatalog
 import com.fly.customizer.util.DeviceInfo
+import com.fly.customizer.util.LiveWallpaperController
 import com.fly.customizer.util.NativeFly
 import com.fly.customizer.util.WallpaperAccent
 import com.fly.customizer.util.WallpaperStudio
@@ -65,12 +67,25 @@ class HomeFragment : Fragment() {
 
         loadDeviceSnapshot()
         loadWallpaperCard()
+        refreshLiveWallpaper()
         renderHistory()
     }
 
     override fun onResume() {
         super.onResume()
         renderHistory()
+        refreshLiveWallpaper()
+    }
+
+    private fun refreshLiveWallpaper() {
+        if (_binding == null) return
+        val running = LiveWallpaperController.isRunning(requireContext())
+        val preset = AnimatedWallpaperCatalog.presetOrDefault(FlyApp.prefs.liveWallpaperId)
+        binding.txtLiveWallpaper.text = if (running) {
+            getString(R.string.live_running, getString(preset.labelRes))
+        } else {
+            getString(R.string.live_not_running)
+        }
     }
 
     private fun loadDeviceSnapshot() {

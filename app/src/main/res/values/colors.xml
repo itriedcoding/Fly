@@ -11,6 +11,7 @@
     <color name="accent_amber">#F0A020</color>
     <color name="accent_rose">#F0417A</color>
     <color name="accent_citrine">#9DBE12</color>
+    <color name="accent_mint_on">#0B1F16</color>
     <color name="accent_on">#FFFFFF</color>
 
     <color name="accent_teal">#12B5A5</color>
@@ -32,6 +33,20 @@
     <color name="accent_sand_on_container">#463606</color>
     <color name="accent_crimson_container">#FFE0E4</color>
     <color name="accent_crimson_on_container">#5A0D17</color>
+
+    <color name="accent_indigo">#5A5AF0</color>
+    <color name="accent_mint">#3ED9A4</color>
+    <color name="accent_plum">#9B3FB5</color>
+    <color name="accent_copper">#C97B3C</color>
+
+    <color name="accent_indigo_container">#E4E3FF</color>
+    <color name="accent_indigo_on_container">#2E2A66</color>
+    <color name="accent_mint_container">#D9FBEE</color>
+    <color name="accent_mint_on_container">#0B4A38</color>
+    <color name="accent_plum_container">#F3DCFA</color>
+    <color name="accent_plum_on_container">#45104F</color>
+    <color name="accent_copper_container">#FBE6D4</color>
+    <color name="accent_copper_on_container">#4A2A08</color>
 
     <color name="accent_violet_container">#EDE9FE</color>
     <color name="accent_violet_on_container">#3A2A78</color>

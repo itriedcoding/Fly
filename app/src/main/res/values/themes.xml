@@ -190,6 +190,50 @@
         <item name="colorOnSecondaryContainer">@color/accent_crimson_on_container</item>
     </style>
 
+    <style name="ThemeOverlay.Fly.Indigo" parent="">
+        <item name="colorPrimary">@color/accent_indigo</item>
+        <item name="colorSecondary">@color/accent_indigo</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_indigo_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_indigo_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_indigo_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_indigo_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Mint" parent="">
+        <item name="colorPrimary">@color/accent_mint</item>
+        <item name="colorSecondary">@color/accent_mint</item>
+        <item name="colorOnPrimary">@color/accent_mint_on</item>
+        <item name="colorOnSecondary">@color/accent_mint_on</item>
+        <item name="colorPrimaryContainer">@color/accent_mint_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_mint_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_mint_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_mint_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Plum" parent="">
+        <item name="colorPrimary">@color/accent_plum</item>
+        <item name="colorSecondary">@color/accent_plum</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_plum_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_plum_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_plum_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_plum_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Copper" parent="">
+        <item name="colorPrimary">@color/accent_copper</item>
+        <item name="colorSecondary">@color/accent_copper</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_copper_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_copper_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_copper_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_copper_on_container</item>
+    </style>
+
     <!-- Reusable layout building blocks. -->
     <style name="Fly.Card" parent="Widget.Material3.CardView.Filled">
         <item name="android:layout_width">match_parent</item>

@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import com.fly.customizer.core.Prefs
 import com.fly.customizer.data.FlyRepository
@@ -13,6 +14,8 @@ import org.json.JSONObject
 
 /**
  * Writes a JSON snapshot of the user's Fly data into `Downloads/Fly`.
+ *
+ * Custom icons are embedded as base64 PNG so a backup really can be restored on another install.
  */
 object BackupExporter {
 
@@ -24,12 +27,19 @@ object BackupExporter {
         val root = JSONObject()
         root.put("app", "Fly")
         root.put("exportedAt", System.currentTimeMillis())
+        root.put("version", 2)
 
         val appearance = JSONObject()
         appearance.put("baseMode", prefs.baseMode)
         appearance.put("accent", prefs.accentId)
         appearance.put("wallpaperTarget", prefs.wallpaperTarget)
         appearance.put("hueShift", prefs.hueShift.toDouble())
+        appearance.put("liveWallpaper", prefs.liveWallpaperId)
+        appearance.put("reduceMotion", prefs.reduceMotion)
+        appearance.put("wallpaperQuality", prefs.wallpaperQuality)
+        appearance.put("liveFps", prefs.liveFps)
+        appearance.put("compactIcons", prefs.compactIcons)
+        appearance.put("haptics", prefs.haptics)
         root.put("appearance", appearance)
 
         val themes = JSONArray()
@@ -67,7 +77,14 @@ object BackupExporter {
 
         val customIcons = JSONArray()
         for ((component, path) in repository.customIcons()) {
-            customIcons.put(JSONObject().put("component", component).put("file", path.substringAfterLast('/')))
+            val bytes = CustomIconStore.readBytes(path)
+            val entry = JSONObject()
+                .put("component", component)
+                .put("file", path.substringAfterLast('/'))
+            if (bytes != null) {
+                entry.put("data", Base64.encodeToString(bytes, Base64.NO_WRAP))
+            }
+            customIcons.put(entry)
         }
         root.put("customIcons", customIcons)
 

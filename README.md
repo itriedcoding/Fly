@@ -16,18 +16,25 @@ No mock data, no placeholders: every screen reads from Android's own APIs.
 
 ## Download
 
-The signed APK is published under **Releases** (latest `v1.2.0`, certificate `CN=Fly`). Verify it
+The signed APK is published under **Releases** (latest `v1.3.0`, certificate `CN=Fly`). Verify it
 with `SHA256SUMS.txt`. Sideload it after allowing installs from unknown sources. The app's own
 Settings → App updates checks the release page for newer builds.
 
 ## Features
 
 ### Wallpaper studio
-- **Fourteen generative recipes** (Aurora, Ember, Mint, Midnight, Rosewater, Solar, Glacier, Void,
-  Sakura, Copper, Lagoon, Nebula, Moss, Horizon).
-- Gradients are rendered pixel by pixel in C++ (`generateGradient`) across six styles — linear,
-  radial, diagonal, banded, angular sweep and dual glow — with an optional separable box blur;
-  the "Remix hue" button rotates the palette in real HSV space.
+- **Thirty static generative recipes** (Aurora, Ember, Mint, Midnight, Rosewater, Solar, Glacier,
+  Void, Sakura, Copper, Lagoon, Nebula, Moss, Horizon, Sorbet, Onyx, Orchid bloom, Sage,
+  Tangerine, Cobalt, Bubblegum, Forest, Wine, Arctic, Sepia, Electric, Peach, Indigo night,
+  Pistachio, Storm) plus **six animated ones** below.
+- Gradients are rendered pixel by pixel in C++ (`generateGradient`) across six static styles —
+  linear, radial, diagonal, banded, angular sweep and dual glow — with an optional separable box
+  blur; the "Remix hue" button rotates the palette in real HSV space.
+- **Animated wallpapers** (Aurora drift, Pulse rings, Orbit, Plasma tide, Comet sweep, Caustics)
+  are real live wallpapers: `FlyWallpaperService` renders every frame in C++ with
+  `generateFrame` and blits it to the wallpaper surface. Rendering stops when the wallpaper is
+  hidden, honours the reduce-motion and frame-rate settings, and scrolls with a parallax factor
+  from `onOffsetsChanged`. The grid shows a live native preview of each animation.
 - **Shuffle** picks a random recipe with a random hue shift and applies it in one tap.
 - **Favourites filter** narrows the grid to starred wallpapers only.
 - **Long-press** exports the wallpaper to `Pictures/Fly` through MediaStore (Android 10+).
@@ -35,11 +42,12 @@ Settings → App updates checks the release page for newer builds.
 - Favourites and apply history are stored in SQLite.
 
 ### Theme studio
-- Three base surfaces (Light, Dark, AMOLED) and **twelve accent colours**.
-- **Twenty-four stock themes** (Obsidian, Midnight ink, Aurora, Neon Tokyo, Ember, Cyber lime,
-  Carbon, Ocean deep, Plum noir, Mint frost, Paper violet, Sunrise, Glacier light, Blossom,
-  Sandstone, Blueprint, Graphite, Pine, Tide, Carnival, Quartz, Vineyard, Frost, Dusk) applied
-  with a single tap.
+- Three base surfaces (Light, Dark, AMOLED) and **sixteen accent colours** (Violet, Azure,
+  Emerald, Amber, Rose, Citrine, Teal, Coral, Orchid, Slate, Sand, Crimson, Indigo, Mint, Plum,
+  Copper).
+- **Forty-four stock themes** applied with a single tap, from Obsidian, Midnight ink, Aurora and
+  Neon Tokyo through Graphite, Pine, Tide and Dusk to Solar flare, Cobalt, Reactor, Jade noir,
+  Ruby noir, Indigo dusk, Periwinkle, Terracotta, Seafoam, Cherry and Lilac.
 - **Match wallpaper**: samples the live wallpaper, runs native dominant-colour extraction and
   picks the closest accent.
 - Accents are real theme overlays applied with `Theme.applyStyle()` before content inflation, so
@@ -81,17 +89,32 @@ Settings → App updates checks the release page for newer builds.
   (the APK asset) or **Open releases page** when GitHub cannot be reached.
 - No account or token is needed; the check uses the public unauthenticated endpoint.
 
+### Settings
+- **Motion & feedback**: reduce motion freezes animated previews and holds a single live
+  wallpaper frame; haptic feedback for long-press; a compact five-column app grid.
+- **Wallpaper rendering**: Small / Balanced / Full resolution, used by both static renders and
+  the live wallpaper frame buffer, plus a live wallpaper frame rate (24 / 30 / 45 fps).
+- **Startup**: check GitHub for updates when Fly opens, or turn it off for fully offline use.
+- **Storage**: real byte counts for the database and icon folder, remove all custom icon files,
+  clear the preview cache, and reset every row and preference behind a confirmation dialog.
+- **Backup**: export a JSON snapshot to `Downloads/Fly` and import one back through the system
+  document picker; imported icons are re-decoded and written into private storage.
+
 ### Dashboard
 - **Current wallpaper card**: renders the live wallpaper and shows the five dominant colours
-  sampled natively from it.
+  sampled natively from it, plus whether Fly's own live wallpaper is currently the active one.
 - Device model, Android version/API level, resolution, density bucket, default launcher,
   launchable app count, icon pack count and widget provider count.
 - Recent wallpaper applies from SQLite and the native engine version string.
 
 ### Data & backup
-- **Export backup** writes a JSON snapshot of appearance settings, saved themes, wallpaper
-  favourites, custom icon assignments and pinned widgets to `Downloads/Fly` via MediaStore.
-- Clearing history and favourites operates on real SQLite rows.
+- **Export backup** writes a JSON snapshot of appearance and rendering settings, saved themes,
+  wallpaper favourites, pinned widgets and custom icons (PNG bytes embedded as base64) to
+  `Downloads/Fly` via MediaStore.
+- **Import backup** parses that file, skips ids that no longer exist in the catalogues, restores
+  the custom icons as real files and reports exactly what was restored.
+- Clearing history, favourites, custom icons and the full reset all operate on real SQLite rows
+  and real files.
 
 ## Native engine
 
@@ -99,6 +122,8 @@ Settings → App updates checks the release page for newer builds.
 
 - `native-lib.cpp` — JNI entry points:
   - `generateGradient` (six gradient styles, deterministic grain)
+  - `generateFrame` (six time-animated styles: flowing curtains, pulsing rings, orbit, plasma,
+    comet sweep and caustics, with a static grain pattern so frames do not flicker)
   - `boxBlur` (separable box blur blended with original detail)
   - `dominantColors` (bucketed histogram, up to eight colours)
   - `contrastRatio`, `luminance`, `paletteHash`, `version`
@@ -171,8 +196,11 @@ app/src/main/java/com/fly/customizer/
 │   ├── widgets/               Provider list
 │   ├── animations/            AnimationsFragment + CurveView.java
 │   └── settings/
+├── wallpaper/FlyWallpaperService.kt  Live wallpaper engine (real frames)
 ├── widgets/WidgetPinReceiver.kt  App-widget pin success callback
-└── util/                      NativeFly, WallpaperStudio, IconPackLoader,
+└── util/                      NativeFly, WallpaperStudio, AnimatedWallpaperCatalog,
+                               LiveWallpaperController, BackupExporter, BackupImporter,
+                               StorageManager, CustomIconStore, IconPackLoader,
                                AppFilterParser, ColorMath, DeviceInfo
 app/src/main/cpp/              C++ / C native engine
 app/src/main/res/              XML layouts, themes, strings, launcher icons
@@ -185,6 +213,7 @@ scripts/make_launcher_icons.py Reproducible PNG launcher icon generator
 ## Permissions
 
 - `SET_WALLPAPER`, `SET_WALLPAPER_HINTS` — applying wallpapers.
+- `BIND_WALLPAPER` — held by the system when it binds `FlyWallpaperService`.
 - `com.android.launcher.permission.INSTALL_SHORTCUT` — legacy shortcut path only.
 - `<queries>` declarations cover launcher apps, home apps and the known icon-pack theme intents;
   the app does not request `QUERY_ALL_PACKAGES`.

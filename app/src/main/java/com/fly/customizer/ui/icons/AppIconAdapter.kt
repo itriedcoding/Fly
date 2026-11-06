@@ -1,6 +1,7 @@
 package com.fly.customizer.ui.icons
 
 import android.graphics.Bitmap
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,12 @@ class AppIconAdapter(
 
     private var apps: List<IconPackLoader.AppEntry> = emptyList()
     private var customIcons: Map<String, Bitmap> = emptyMap()
+
+    /** Smaller icons for the five column layout. */
+    var compact: Boolean = false
+
+    /** Vibrate on long-press, following the settings toggle. */
+    var haptics: Boolean = true
 
     fun submit(items: List<IconPackLoader.AppEntry>, icons: Map<String, Bitmap>) {
         apps = items
@@ -46,8 +53,18 @@ class AppIconAdapter(
         }
         binding.root.setOnClickListener { onSelect(app) }
         binding.root.setOnLongClickListener {
+            if (haptics) {
+                binding.root.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
             onLongPress(app)
             true
+        }
+
+        val density = binding.root.resources.displayMetrics.density
+        val iconSize = ((if (compact) 40 else 52) * density).toInt()
+        binding.appIcon.layoutParams = binding.appIcon.layoutParams.apply {
+            width = iconSize
+            height = iconSize
         }
     }
 }

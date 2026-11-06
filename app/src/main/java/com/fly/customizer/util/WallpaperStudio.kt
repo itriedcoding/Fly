@@ -136,6 +136,119 @@ object WallpaperStudio {
             style = 4,
             grain = 3,
         ),
+        WallpaperPreset(
+            id = "sorbet",
+            labelRes = R.string.wallpaper_sorbet,
+            palette = intArrayOf(0xFF2A1030.toInt(), 0xFFB0437A.toInt(), 0xFFFFB27A.toInt(), 0xFFFFE3C4.toInt()),
+            style = 0,
+            grain = 4,
+        ),
+        WallpaperPreset(
+            id = "onyx",
+            labelRes = R.string.wallpaper_onyx,
+            palette = intArrayOf(0xFF050506.toInt(), 0xFF1A1A22.toInt(), 0xFF34344A.toInt(), 0xFF6A6A8C.toInt()),
+            style = 5,
+            grain = 2,
+        ),
+        WallpaperPreset(
+            id = "orchid_bloom",
+            labelRes = R.string.wallpaper_orchid_bloom,
+            palette = intArrayOf(0xFF1B0726.toInt(), 0xFF6B2A9C.toInt(), 0xFFC77BFF.toInt(), 0xFFF3E1FF.toInt()),
+            style = 1,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "sage",
+            labelRes = R.string.wallpaper_sage,
+            palette = intArrayOf(0xFF0E190F.toInt(), 0xFF3C5B3A.toInt(), 0xFF9BC48C.toInt(), 0xFFE8F5E1.toInt()),
+            style = 2,
+            grain = 2,
+        ),
+        WallpaperPreset(
+            id = "tangerine",
+            labelRes = R.string.wallpaper_tangerine,
+            palette = intArrayOf(0xFF2A0E02.toInt(), 0xFF9C3F05.toInt(), 0xFFFF8A1F.toInt(), 0xFFFFD9A3.toInt()),
+            style = 4,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "cobalt",
+            labelRes = R.string.wallpaper_cobalt,
+            palette = intArrayOf(0xFF020A24.toInt(), 0xFF0F2F8C.toInt(), 0xFF3B6BFF.toInt(), 0xFFBFD6FF.toInt()),
+            style = 0,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "bubblegum",
+            labelRes = R.string.wallpaper_bubblegum,
+            palette = intArrayOf(0xFF2B0620.toInt(), 0xFFA81F72.toInt(), 0xFFFF7BC8.toInt(), 0xFFFFE0F2.toInt()),
+            style = 5,
+            grain = 4,
+        ),
+        WallpaperPreset(
+            id = "forest",
+            labelRes = R.string.wallpaper_forest,
+            palette = intArrayOf(0xFF04140A.toInt(), 0xFF144D26.toInt(), 0xFF4FBF6A.toInt(), 0xFFD6F5DC.toInt()),
+            style = 3,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "wine",
+            labelRes = R.string.wallpaper_wine,
+            palette = intArrayOf(0xFF1B0409.toInt(), 0xFF5C0B22.toInt(), 0xFFB01B46.toInt(), 0xFFF2B3C4.toInt()),
+            style = 1,
+            grain = 2,
+        ),
+        WallpaperPreset(
+            id = "arctic",
+            labelRes = R.string.wallpaper_arctic,
+            palette = intArrayOf(0xFF06121C.toInt(), 0xFF14486B.toInt(), 0xFF62C6E8.toInt(), 0xFFF2FDFF.toInt()),
+            style = 4,
+            grain = 2,
+        ),
+        WallpaperPreset(
+            id = "sepia",
+            labelRes = R.string.wallpaper_sepia,
+            palette = intArrayOf(0xFF1A120A.toInt(), 0xFF5C4022.toInt(), 0xFFB08A56.toInt(), 0xFFF3E4C8.toInt()),
+            style = 2,
+            grain = 4,
+        ),
+        WallpaperPreset(
+            id = "electric",
+            labelRes = R.string.wallpaper_electric,
+            palette = intArrayOf(0xFF0A0618.toInt(), 0xFF2D1070.toInt(), 0xFF7B2BFF.toInt(), 0xFF35F0D0.toInt()),
+            style = 5,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "peach",
+            labelRes = R.string.wallpaper_peach,
+            palette = intArrayOf(0xFF2B1220.toInt(), 0xFF9C4A5A.toInt(), 0xFFFF9E8A.toInt(), 0xFFFFE6D6.toInt()),
+            style = 0,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "indigo_night",
+            labelRes = R.string.wallpaper_indigo_night,
+            palette = intArrayOf(0xFF060720.toInt(), 0xFF1A1F6B.toInt(), 0xFF4A54D6.toInt(), 0xFFC7CBFF.toInt()),
+            style = 3,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "pistachio",
+            labelRes = R.string.wallpaper_pistachio,
+            palette = intArrayOf(0xFF101A08.toInt(), 0xFF40601A.toInt(), 0xFFA8C25A.toInt(), 0xFFF0F8D8.toInt()),
+            style = 4,
+            grain = 2,
+        ),
+        WallpaperPreset(
+            id = "storm",
+            labelRes = R.string.wallpaper_storm,
+            palette = intArrayOf(0xFF0A0D12.toInt(), 0xFF243040.toInt(), 0xFF4C6478.toInt(), 0xFFAFC4D4.toInt()),
+            style = 2,
+            grain = 4,
+            blurRadius = 2,
+        ),
     )
 
     fun preset(id: String): WallpaperPreset? = presets.firstOrNull { it.id == id }
@@ -160,10 +273,17 @@ object WallpaperStudio {
         return Bitmap.createBitmap(pixels, safeWidth, safeHeight, Bitmap.Config.ARGB_8888)
     }
 
-    /** Full resolution size for the current display, capped to keep memory use sane. */
+    /**
+     * Render size for the current display, following the rendering quality preference so users on
+     * slow devices can trade sharpness for speed.
+     */
     fun suggestedSize(context: Context): Pair<Int, Int> {
         val metrics = context.resources.displayMetrics
-        val targetWidth = metrics.widthPixels.coerceIn(720, 1440)
+        val targetWidth = when (Prefs(context).wallpaperQuality) {
+            Prefs.QUALITY_SMALL -> 720
+            Prefs.QUALITY_FULL -> metrics.widthPixels.coerceIn(1080, 2160)
+            else -> 1080
+        }
         val ratio = metrics.heightPixels.toFloat() / metrics.widthPixels.toFloat()
         val targetHeight = (targetWidth * ratio).toInt().coerceAtLeast(targetWidth)
         return targetWidth to targetHeight

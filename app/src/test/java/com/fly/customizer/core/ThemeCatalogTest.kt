@@ -9,7 +9,7 @@ class ThemeCatalogTest {
     @Test
     fun stockThemesAreUniqueAndComplete() {
         val themes = ThemeCatalog.stockThemes
-        assertTrue("expected at least 24 stock themes", themes.size >= 24)
+        assertTrue("expected at least 44 stock themes", themes.size >= 44)
         assertEquals("duplicate theme ids", themes.size, themes.map { it.id }.toSet().size)
         assertEquals("duplicate labels", themes.size, themes.map { it.labelRes }.toSet().size)
         for (theme in themes) {
@@ -28,7 +28,7 @@ class ThemeCatalogTest {
     @Test
     fun accentsAreUniqueAndResolvable() {
         val accents = ThemeCatalog.accents
-        assertTrue("expected at least 12 accents", accents.size >= 12)
+        assertTrue("expected at least 16 accents", accents.size >= 16)
         assertEquals(accents.size, accents.map { it.id }.toSet().size)
         assertEquals(accents.size, accents.map { it.overlayRes }.toSet().size)
         for (accent in accents) {
@@ -42,5 +42,15 @@ class ThemeCatalogTest {
     fun nearestAccentPicksTheExactSwatch() {
         val emerald = ThemeCatalog.accents.first { it.id == "emerald" }
         assertEquals(emerald, ThemeCatalog.nearestAccent(emerald.color))
+    }
+
+    @Test
+    fun stockThemeCombinationsAreDistinct() {
+        val combinations = ThemeCatalog.stockThemes.map { it.baseMode.id to it.accentId }
+        assertEquals(
+            "duplicate base + accent combinations",
+            combinations.size,
+            combinations.toSet().size,
+        )
     }
 }
