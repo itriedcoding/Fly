@@ -21,6 +21,11 @@
         style="@style/Fly.Caption"
         android:layout_marginTop="10dp" />
 
+    <TextView
+        android:id="@+id/tvPinnedSummary"
+        style="@style/Fly.Caption"
+        android:layout_marginTop="4dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/widgetList"
         android:layout_width="match_parent"

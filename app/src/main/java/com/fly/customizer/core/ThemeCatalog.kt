@@ -168,6 +168,14 @@ object ThemeCatalog {
         ThemePreset("blossom", R.string.theme_blossom, BaseMode.LIGHT, "rose"),
         ThemePreset("sandstone", R.string.theme_sandstone, BaseMode.LIGHT, "sand"),
         ThemePreset("blueprint", R.string.theme_blueprint, BaseMode.LIGHT, "slate"),
+        ThemePreset("graphite", R.string.theme_graphite, BaseMode.DARK, "slate"),
+        ThemePreset("pine", R.string.theme_pine, BaseMode.AMOLED, "emerald"),
+        ThemePreset("tide", R.string.theme_tide, BaseMode.LIGHT, "teal"),
+        ThemePreset("carnival", R.string.theme_carnival, BaseMode.DARK, "amber"),
+        ThemePreset("quartz", R.string.theme_quartz, BaseMode.LIGHT, "orchid"),
+        ThemePreset("vineyard", R.string.theme_vineyard, BaseMode.AMOLED, "rose"),
+        ThemePreset("frost", R.string.theme_frost, BaseMode.LIGHT, "citrine"),
+        ThemePreset("dusk", R.string.theme_dusk, BaseMode.DARK, "violet"),
     )
 
     fun accent(id: String?): AccentSpec = accents.firstOrNull { it.id == id } ?: accents.first()

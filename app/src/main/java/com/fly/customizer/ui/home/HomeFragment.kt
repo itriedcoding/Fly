@@ -1,10 +1,12 @@
 package com.fly.customizer.ui.home
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -16,13 +18,15 @@ import com.fly.customizer.ui.MainActivity
 import com.fly.customizer.ui.animations.AnimationsFragment
 import com.fly.customizer.util.DeviceInfo
 import com.fly.customizer.util.NativeFly
+import com.fly.customizer.util.WallpaperAccent
 import com.fly.customizer.util.WallpaperStudio
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Dashboard: device facts, live package counts, quick navigation and apply history.
+ * Dashboard: current wallpaper palette, device facts, live package counts, quick navigation and
+ * apply history.
  */
 class HomeFragment : Fragment() {
 
@@ -60,6 +64,7 @@ class HomeFragment : Fragment() {
         )
 
         loadDeviceSnapshot()
+        loadWallpaperCard()
         renderHistory()
     }
 
@@ -94,6 +99,45 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun loadWallpaperCard() {
+        val context = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            val preview = withContext(Dispatchers.IO) { WallpaperAccent.preview(context) }
+            if (_binding == null) return@launch
+            if (preview == null) {
+                binding.wallpaperPreview.isVisible = false
+                binding.paletteRow.isVisible = false
+                binding.txtPaletteCaption.isVisible = false
+                binding.txtWallpaperEmpty.isVisible = true
+                return@launch
+            }
+            binding.txtWallpaperEmpty.isVisible = false
+            binding.wallpaperPreview.setImageBitmap(preview.bitmap)
+            renderPalette(preview.colors)
+            binding.txtPaletteCaption.text =
+                getString(R.string.palette_caption, preview.colors.size)
+        }
+    }
+
+    private fun renderPalette(colors: IntArray) {
+        val density = resources.displayMetrics.density
+        val size = (24 * density).toInt()
+        val margin = (8 * density).toInt()
+        binding.paletteRow.removeAllViews()
+        for (color in colors) {
+            val dot = View(requireContext())
+            val params = LinearLayout.LayoutParams(size, size)
+            params.marginEnd = margin
+            dot.layoutParams = params
+            dot.background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(color)
+                setStroke((1 * density).toInt().coerceAtLeast(1), 0x33FFFFFF)
+            }
+            binding.paletteRow.addView(dot)
+        }
+    }
+
     private fun renderHistory() {
         binding.recentContainer.removeAllViews()
         val entries = FlyApp.repository.recentApplies(5)
@@ -113,6 +157,8 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.paletteRow.removeAllViews()
+        binding.wallpaperPreview.setImageDrawable(null)
         _binding = null
     }
 }

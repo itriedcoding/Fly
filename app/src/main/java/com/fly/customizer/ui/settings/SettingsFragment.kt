@@ -16,6 +16,7 @@ import com.fly.customizer.R
 import com.fly.customizer.core.Prefs
 import com.fly.customizer.databinding.FragmentSettingsBinding
 import com.fly.customizer.ui.MainActivity
+import com.fly.customizer.util.BackupExporter
 import com.fly.customizer.util.NativeFly
 import com.fly.customizer.util.UpdateChecker
 import com.fly.customizer.util.UpdateInfo
@@ -87,6 +88,7 @@ class SettingsFragment : Fragment() {
 
         binding.btnCheckUpdates.setOnClickListener { checkForUpdates() }
         binding.btnOpenRelease.setOnClickListener { openRelease() }
+        binding.btnExportBackup.setOnClickListener { exportBackup() }
 
         refreshSummary()
         binding.root.post { suppressCallbacks = false }
@@ -130,11 +132,28 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    private fun exportBackup() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                BackupExporter.export(requireContext().applicationContext, FlyApp.repository, prefs)
+            }
+            if (_binding == null) return@launch
+            val message = when (result) {
+                BackupExporter.Result.SAVED -> R.string.backup_saved
+                BackupExporter.Result.UNSUPPORTED -> R.string.backup_needs_android10
+                BackupExporter.Result.FAILED -> R.string.backup_failed
+            }
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun refreshSummary() {
         val applies = FlyApp.repository.applyCount()
         val favorites = FlyApp.repository.favoriteCount()
         val themes = FlyApp.repository.themes().size
-        binding.txtDataSummary.text = getString(R.string.data_summary, applies, favorites, themes)
+        val widgets = FlyApp.repository.pinnedWidgetCount()
+        binding.txtDataSummary.text =
+            getString(R.string.data_summary, applies, favorites, themes, widgets)
     }
 
     override fun onDestroyView() {

@@ -24,6 +24,8 @@ class FlyRepository(context: Context) {
 
     fun favoriteCount(): Int = database.favoriteCount()
 
+    fun favoriteWallpapers(): List<FavoriteWallpaper> = database.favoriteWallpapers()
+
     fun saveTheme(name: String, baseMode: String, accentId: String): Long =
         database.insertCustomTheme(name, baseMode, accentId)
 
@@ -36,6 +38,21 @@ class FlyRepository(context: Context) {
     fun pinnedShortcutCount(): Int = database.pinnedShortcutCount()
 
     fun lastIconPack(): String? = database.lastIconPack()
+
+    fun setCustomIcon(component: String, path: String) = database.setCustomIcon(component, path)
+
+    fun customIcons(): Map<String, String> = database.customIcons()
+
+    fun deleteCustomIcon(component: String) = database.deleteCustomIcon(component)
+
+    fun customIconCount(): Int = database.customIconCount()
+
+    fun recordPinnedWidget(provider: String, label: String, widgetId: Int) =
+        database.recordPinnedWidget(provider, label, widgetId)
+
+    fun pinnedWidgetCount(): Int = database.pinnedWidgetCount()
+
+    fun pinnedWidgets(limit: Int = 10): List<PinnedWidget> = database.pinnedWidgets(limit)
 
     fun clearHistory() = database.clearHistory()
 

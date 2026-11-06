@@ -9,10 +9,10 @@ import com.fly.customizer.R
 import com.fly.customizer.databinding.ItemWidgetBinding
 
 /**
- * Installed widget providers with preview images.
+ * Installed widget providers with preview images and live home-screen counts.
  */
 class WidgetAdapter(
-    private val onPin: (AppWidgetProviderInfo) -> Unit,
+    private val onPin: (Item) -> Unit,
 ) : RecyclerView.Adapter<WidgetAdapter.Holder>() {
 
     data class Item(
@@ -48,6 +48,6 @@ class WidgetAdapter(
         } else {
             binding.widgetPreview.setImageResource(R.drawable.ic_widgets)
         }
-        binding.btnPinWidget.setOnClickListener { onPin(item.info) }
+        binding.btnPinWidget.setOnClickListener { onPin(item) }
     }
 }

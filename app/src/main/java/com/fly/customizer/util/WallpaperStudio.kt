@@ -93,9 +93,55 @@ object WallpaperStudio {
             style = 3,
             grain = 2,
         ),
+        WallpaperPreset(
+            id = "sakura",
+            labelRes = R.string.wallpaper_sakura,
+            palette = intArrayOf(0xFF2B0A18.toInt(), 0xFFB23A6B.toInt(), 0xFFFFB7C7.toInt()),
+            style = 1,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "copper",
+            labelRes = R.string.wallpaper_copper,
+            palette = intArrayOf(0xFF1C0F07.toInt(), 0xFF8A4B22.toInt(), 0xFFE39A54.toInt(), 0xFFFFD9A8.toInt()),
+            style = 4,
+            grain = 3,
+        ),
+        WallpaperPreset(
+            id = "lagoon",
+            labelRes = R.string.wallpaper_lagoon,
+            palette = intArrayOf(0xFF03211E.toInt(), 0xFF0C6B5F.toInt(), 0xFF4FE0C0.toInt(), 0xFFE9FFF9.toInt()),
+            style = 2,
+            grain = 2,
+        ),
+        WallpaperPreset(
+            id = "nebula",
+            labelRes = R.string.wallpaper_nebula,
+            palette = intArrayOf(0xFF0A0418.toInt(), 0xFF3A1B6E.toInt(), 0xFF8B5CF6.toInt(), 0xFF40D9FF.toInt()),
+            style = 5,
+            grain = 4,
+        ),
+        WallpaperPreset(
+            id = "moss",
+            labelRes = R.string.wallpaper_moss,
+            palette = intArrayOf(0xFF101A05.toInt(), 0xFF3E5C12.toInt(), 0xFFA8C94A.toInt()),
+            style = 3,
+            grain = 2,
+            blurRadius = 2,
+        ),
+        WallpaperPreset(
+            id = "horizon",
+            labelRes = R.string.wallpaper_horizon,
+            palette = intArrayOf(0xFF120720.toInt(), 0xFF5A2A8C.toInt(), 0xFFFF8A5B.toInt(), 0xFFFFD36E.toInt()),
+            style = 4,
+            grain = 3,
+        ),
     )
 
     fun preset(id: String): WallpaperPreset? = presets.firstOrNull { it.id == id }
+
+    /** Gradient style names rendered by libflycore. */
+    val styleCount: Int get() = 6
 
     /** Renders the preset at the requested size with the native gradient engine. */
     fun render(preset: WallpaperPreset, width: Int, height: Int, hueShift: Float): Bitmap {

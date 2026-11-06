@@ -57,6 +57,26 @@ float gradient_position(int x, int y, int width, int height, int style) {
             const float band = std::floor(fy * 6.0f) / 6.0f;
             return clamp01(band * 0.82f + fx * 0.18f);
         }
+        case 4: {
+            // Angular sweep around the centre.
+            const float dx = fx - 0.5f;
+            const float dy = fy - 0.5f;
+            float angle = std::atan2(dy, dx) / (2.0f * 3.14159265f) + 0.5f;
+            if (angle < 0.0f) {
+                angle += 1.0f;
+            }
+            return clamp01(angle);
+        }
+        case 5: {
+            // Two symmetric glows that fade toward the edges.
+            const float ax = fx - 0.28f;
+            const float ay = fy - 0.32f;
+            const float bx = fx - 0.74f;
+            const float by = fy - 0.72f;
+            const float first = std::sqrt(ax * ax + ay * ay);
+            const float second = std::sqrt(bx * bx + by * by);
+            return clamp01(0.5f + 0.5f * (first - second) * 2.1f);
+        }
         case 0:
         default:
             // Diagonal sweep.

@@ -16,16 +16,18 @@ No mock data, no placeholders: every screen reads from Android's own APIs.
 
 ## Download
 
-The signed APK is published under **Releases** (latest `v1.1.0`, certificate `CN=Fly`). Verify it
+The signed APK is published under **Releases** (latest `v1.2.0`, certificate `CN=Fly`). Verify it
 with `SHA256SUMS.txt`. Sideload it after allowing installs from unknown sources. The app's own
 Settings → App updates checks the release page for newer builds.
 
 ## Features
 
 ### Wallpaper studio
-- Eight generative recipes (Aurora, Ember, Mint, Midnight, Rosewater, Solar, Glacier, Void).
-- Gradients are rendered pixel by pixel in C++ (`generateGradient`) with an optional separable
-  box blur; the "Remix hue" button rotates the palette in real HSV space.
+- **Fourteen generative recipes** (Aurora, Ember, Mint, Midnight, Rosewater, Solar, Glacier, Void,
+  Sakura, Copper, Lagoon, Nebula, Moss, Horizon).
+- Gradients are rendered pixel by pixel in C++ (`generateGradient`) across six styles — linear,
+  radial, diagonal, banded, angular sweep and dual glow — with an optional separable box blur;
+  the "Remix hue" button rotates the palette in real HSV space.
 - **Shuffle** picks a random recipe with a random hue shift and applies it in one tap.
 - **Favourites filter** narrows the grid to starred wallpapers only.
 - **Long-press** exports the wallpaper to `Pictures/Fly` through MediaStore (Android 10+).
@@ -34,9 +36,10 @@ Settings → App updates checks the release page for newer builds.
 
 ### Theme studio
 - Three base surfaces (Light, Dark, AMOLED) and **twelve accent colours**.
-- **Sixteen stock themes** (Obsidian, Midnight ink, Aurora, Neon Tokyo, Ember, Cyber lime,
+- **Twenty-four stock themes** (Obsidian, Midnight ink, Aurora, Neon Tokyo, Ember, Cyber lime,
   Carbon, Ocean deep, Plum noir, Mint frost, Paper violet, Sunrise, Glacier light, Blossom,
-  Sandstone, Blueprint) applied with a single tap.
+  Sandstone, Blueprint, Graphite, Pine, Tide, Carnival, Quartz, Vineyard, Frost, Dusk) applied
+  with a single tap.
 - **Match wallpaper**: samples the live wallpaper, runs native dominant-colour extraction and
   picks the closest accent.
 - Accents are real theme overlays applied with `Theme.applyStyle()` before content inflation, so
@@ -50,13 +53,20 @@ Settings → App updates checks the release page for newer builds.
 - Icons are resolved from each pack's `appfilter.xml`, read either as a compiled XML resource or
   from the pack's assets, using the pack's own `Resources`.
 - Live **app search** filters the themed grid by name.
-- Tapping an app pins a home-screen shortcut using the pack's artwork (`ShortcutManager` on
-  Android 8+, legacy `INSTALL_SHORTCUT` broadcast below that).
+- **Custom icons**: long-press any app, pick an image from the system picker and Fly copies it into
+  private storage, downscales it and shows it in the grid and on pinned shortcuts. The mapping is
+  stored in SQLite; "Remove custom icon" deletes both the row and the file.
+- Tapping an app pins a home-screen shortcut using the custom icon, the pack's artwork or the
+  system icon (`ShortcutManager` on Android 8+, legacy `INSTALL_SHORTCUT` broadcast below that).
 
 ### Widgets
 - Lists every provider from `AppWidgetManager.installedProviders()` with its preview image,
-  minimum size and resize mode.
-- "Pin" issues a real `requestPinAppWidget` request when the launcher supports it.
+  minimum size, resize mode and how many instances are already live on the home screen
+  (`getAppWidgetIds`).
+- "Pin" issues a real `requestPinAppWidget` request with a **success `PendingIntent`**; the
+  system-filled `EXTRA_APPWIDGET_ID` arrives at `WidgetPinReceiver`, which records the confirmed
+  pin in SQLite and shows a toast. A declined or unsupported launcher gets an explicit message,
+  never a fake success.
 
 ### Animation studio
 - **Twelve presets**: Spring, Orbit, Wave, Flip, Slide, Zoom, Drop, Shake, Pendulum, Jelly,
@@ -72,16 +82,23 @@ Settings → App updates checks the release page for newer builds.
 - No account or token is needed; the check uses the public unauthenticated endpoint.
 
 ### Dashboard
+- **Current wallpaper card**: renders the live wallpaper and shows the five dominant colours
+  sampled natively from it.
 - Device model, Android version/API level, resolution, density bucket, default launcher,
   launchable app count, icon pack count and widget provider count.
 - Recent wallpaper applies from SQLite and the native engine version string.
+
+### Data & backup
+- **Export backup** writes a JSON snapshot of appearance settings, saved themes, wallpaper
+  favourites, custom icon assignments and pinned widgets to `Downloads/Fly` via MediaStore.
+- Clearing history and favourites operates on real SQLite rows.
 
 ## Native engine
 
 `app/src/main/cpp/`
 
 - `native-lib.cpp` — JNI entry points:
-  - `generateGradient` (four gradient styles, deterministic grain)
+  - `generateGradient` (six gradient styles, deterministic grain)
   - `boxBlur` (separable box blur blended with original detail)
   - `dominantColors` (bucketed histogram, up to eight colours)
   - `contrastRatio`, `luminance`, `paletteHash`, `version`
@@ -154,6 +171,7 @@ app/src/main/java/com/fly/customizer/
 │   ├── widgets/               Provider list
 │   ├── animations/            AnimationsFragment + CurveView.java
 │   └── settings/
+├── widgets/WidgetPinReceiver.kt  App-widget pin success callback
 └── util/                      NativeFly, WallpaperStudio, IconPackLoader,
                                AppFilterParser, ColorMath, DeviceInfo
 app/src/main/cpp/              C++ / C native engine

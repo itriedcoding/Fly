@@ -47,6 +47,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fly.Dark">
 
+        <receiver
+            android:name=".widgets.WidgetPinReceiver"
+            android:exported="false" />
+
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|uiMode"

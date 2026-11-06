@@ -1,1 +1,1 @@
-ff404e8dfb5a40a8bbe7c1cb2ec6d5d358e7e281c70094065b7d0b0027f365ff  Fly-1.1.0.apk
+e5dbe6b3cf59557cfd229bb3e4abe47c64f121b7e8f95e7eed6d11256a95f17b  releases/Fly-1.2.0.apk

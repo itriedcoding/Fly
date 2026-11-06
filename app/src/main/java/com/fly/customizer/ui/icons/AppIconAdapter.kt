@@ -1,5 +1,6 @@
 package com.fly.customizer.ui.icons
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,16 +8,20 @@ import com.fly.customizer.databinding.ItemAppIconBinding
 import com.fly.customizer.util.IconPackLoader
 
 /**
- * Grid of launchable apps showing the icon resolved through the selected pack.
+ * Grid of launchable apps showing either the user's custom icon or the icon resolved through the
+ * selected pack.
  */
 class AppIconAdapter(
     private val onSelect: (IconPackLoader.AppEntry) -> Unit,
+    private val onLongPress: (IconPackLoader.AppEntry) -> Unit,
 ) : RecyclerView.Adapter<AppIconAdapter.Holder>() {
 
     private var apps: List<IconPackLoader.AppEntry> = emptyList()
+    private var customIcons: Map<String, Bitmap> = emptyMap()
 
-    fun submit(items: List<IconPackLoader.AppEntry>) {
+    fun submit(items: List<IconPackLoader.AppEntry>, icons: Map<String, Bitmap>) {
         apps = items
+        customIcons = icons
         notifyDataSetChanged()
     }
 
@@ -31,8 +36,18 @@ class AppIconAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val app = apps[position]
-        holder.binding.appLabel.text = app.label
-        holder.binding.appIcon.setImageDrawable(app.themedIcon ?: app.icon)
-        holder.binding.root.setOnClickListener { onSelect(app) }
+        val binding = holder.binding
+        binding.appLabel.text = app.label
+        val custom = customIcons[app.component]
+        if (custom != null && !custom.isRecycled) {
+            binding.appIcon.setImageBitmap(custom)
+        } else {
+            binding.appIcon.setImageDrawable(app.themedIcon ?: app.icon)
+        }
+        binding.root.setOnClickListener { onSelect(app) }
+        binding.root.setOnLongClickListener {
+            onLongPress(app)
+            true
+        }
     }
 }
