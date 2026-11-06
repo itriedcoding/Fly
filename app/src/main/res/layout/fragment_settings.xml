@@ -82,6 +82,59 @@
 
                 <TextView
                     style="@style/Fly.Section"
+                    android:text="@string/settings_updates" />
+
+                <TextView
+                    android:id="@+id/txtUpdateStatus"
+                    style="@style/Fly.Body" />
+
+                <TextView
+                    android:id="@+id/txtCurrentBuild"
+                    style="@style/Fly.Caption"
+                    android:layout_marginTop="4dp" />
+
+                <ProgressBar
+                    android:id="@+id/progressUpdate"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="8dp"
+                    android:indeterminateTint="?attr/colorPrimary"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCheckUpdates"
+                        style="@style/Fly.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/update_check_button" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOpenRelease"
+                        style="@style/Fly.PrimaryButton"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/update_open_releases" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Fly.Section"
                     android:text="@string/settings_data" />
 
                 <TextView

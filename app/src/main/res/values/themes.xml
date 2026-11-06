@@ -124,6 +124,72 @@
         <item name="colorOnSecondaryContainer">@color/accent_citrine_on_container</item>
     </style>
 
+    <style name="ThemeOverlay.Fly.Teal" parent="">
+        <item name="colorPrimary">@color/accent_teal</item>
+        <item name="colorSecondary">@color/accent_teal</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_teal_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_teal_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_teal_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_teal_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Coral" parent="">
+        <item name="colorPrimary">@color/accent_coral</item>
+        <item name="colorSecondary">@color/accent_coral</item>
+        <item name="colorOnPrimary">@color/fly_ink</item>
+        <item name="colorOnSecondary">@color/fly_ink</item>
+        <item name="colorPrimaryContainer">@color/accent_coral_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_coral_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_coral_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_coral_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Orchid" parent="">
+        <item name="colorPrimary">@color/accent_orchid</item>
+        <item name="colorSecondary">@color/accent_orchid</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_orchid_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_orchid_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_orchid_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_orchid_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Slate" parent="">
+        <item name="colorPrimary">@color/accent_slate</item>
+        <item name="colorSecondary">@color/accent_slate</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_slate_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_slate_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_slate_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_slate_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Sand" parent="">
+        <item name="colorPrimary">@color/accent_sand</item>
+        <item name="colorSecondary">@color/accent_sand</item>
+        <item name="colorOnPrimary">@color/fly_ink</item>
+        <item name="colorOnSecondary">@color/fly_ink</item>
+        <item name="colorPrimaryContainer">@color/accent_sand_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_sand_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_sand_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_sand_on_container</item>
+    </style>
+
+    <style name="ThemeOverlay.Fly.Crimson" parent="">
+        <item name="colorPrimary">@color/accent_crimson</item>
+        <item name="colorSecondary">@color/accent_crimson</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
+        <item name="colorPrimaryContainer">@color/accent_crimson_container</item>
+        <item name="colorOnPrimaryContainer">@color/accent_crimson_on_container</item>
+        <item name="colorSecondaryContainer">@color/accent_crimson_container</item>
+        <item name="colorOnSecondaryContainer">@color/accent_crimson_on_container</item>
+    </style>
+
     <!-- Reusable layout building blocks. -->
     <style name="Fly.Card" parent="Widget.Material3.CardView.Filled">
         <item name="android:layout_width">match_parent</item>

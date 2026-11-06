@@ -19,26 +19,32 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Verify artifact and checksums
+      - name: Locate the artifact for this version
+        id: artifact
         run: |
           set -euo pipefail
-          ls -la releases/
-          sha256sum releases/*.apk | tee releases/SHA256SUMS.txt
+          VERSION=$(grep -oP '(?<=versionName = ")[^"]+' app/build.gradle.kts | head -1)
+          APK="releases/Fly-${VERSION}.apk"
+          test -f "${APK}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "apk=${APK}" >> "$GITHUB_OUTPUT"
+          sha256sum "${APK}" | tee releases/SHA256SUMS.txt
 
       - name: Create or update release
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.artifact.outputs.version }}
+          APK: ${{ steps.artifact.outputs.apk }}
         run: |
           set -euo pipefail
-          VERSION=$(grep -oP '(?<=versionName = ")[^"]+' app/build.gradle.kts | head -1)
           TAG="v${VERSION}"
-          echo "Publishing ${TAG}"
+          echo "Publishing ${TAG} with ${APK}"
           if gh release view "${TAG}" > /dev/null 2>&1; then
-            gh release upload "${TAG}" releases/*.apk releases/SHA256SUMS.txt --clobber
+            gh release upload "${TAG}" "${APK}" releases/SHA256SUMS.txt --clobber
           else
-            gh release create "${TAG}" releases/*.apk releases/SHA256SUMS.txt \
+            gh release create "${TAG}" "${APK}" releases/SHA256SUMS.txt \
               --title "Fly ${VERSION}" \
-              --notes "Fly ${VERSION}: generative wallpaper studio, runtime theme engine, icon pack browser, widget pinning and animation studio.
+              --notes "Fly ${VERSION}: twelve accents, sixteen stock themes, wallpaper matching, twelve animation presets, gallery export, icon pack browser with search, widget pinning and an in-app update checker.
 
           - Signed release APK, certificate CN=Fly
           - minSdk 24, targetSdk 34, arm64-v8a / armeabi-v7a / x86_64

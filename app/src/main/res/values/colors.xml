@@ -13,6 +13,26 @@
     <color name="accent_citrine">#9DBE12</color>
     <color name="accent_on">#FFFFFF</color>
 
+    <color name="accent_teal">#12B5A5</color>
+    <color name="accent_coral">#FF6B5B</color>
+    <color name="accent_orchid">#C05CFF</color>
+    <color name="accent_slate">#64748B</color>
+    <color name="accent_sand">#C9A227</color>
+    <color name="accent_crimson">#D7263D</color>
+
+    <color name="accent_teal_container">#D7F7F2</color>
+    <color name="accent_teal_on_container">#0B3F39</color>
+    <color name="accent_coral_container">#FFE3DF</color>
+    <color name="accent_coral_on_container">#5A1D16</color>
+    <color name="accent_orchid_container">#F6E0FF</color>
+    <color name="accent_orchid_on_container">#4A1263</color>
+    <color name="accent_slate_container">#E2E8F0</color>
+    <color name="accent_slate_on_container">#2B3444</color>
+    <color name="accent_sand_container">#FBF0D2</color>
+    <color name="accent_sand_on_container">#463606</color>
+    <color name="accent_crimson_container">#FFE0E4</color>
+    <color name="accent_crimson_on_container">#5A0D17</color>
+
     <color name="accent_violet_container">#EDE9FE</color>
     <color name="accent_violet_on_container">#3A2A78</color>
     <color name="accent_azure_container">#E0EEFF</color>

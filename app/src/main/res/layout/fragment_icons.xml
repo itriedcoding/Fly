@@ -50,6 +50,23 @@
         android:layout_marginTop="6dp"
         android:text="@string/pin_hint" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/search_apps_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <ProgressBar
         android:id="@+id/iconProgress"
         android:layout_width="26dp"
@@ -59,11 +76,18 @@
         android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/txtSearchEmpty"
+        style="@style/Fly.Body"
+        android:layout_marginTop="8dp"
+        android:text="@string/search_empty"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appIconList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingBottom="12dp" />

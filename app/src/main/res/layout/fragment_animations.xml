@@ -44,12 +44,45 @@
                         android:layout_height="88dp"
                         android:layout_gravity="center"
                         android:background="@drawable/bg_anim_target" />
+
+                    <LinearLayout
+                        android:id="@+id/staggerRow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <View
+                            android:id="@+id/dotOne"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:background="@drawable/bg_dot"
+                            android:backgroundTint="?attr/colorPrimary" />
+
+                        <View
+                            android:id="@+id/dotTwo"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_marginStart="14dp"
+                            android:background="@drawable/bg_dot"
+                            android:backgroundTint="?attr/colorPrimary" />
+
+                        <View
+                            android:id="@+id/dotThree"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_marginStart="14dp"
+                            android:background="@drawable/bg_dot"
+                            android:backgroundTint="?attr/colorPrimary" />
+                    </LinearLayout>
                 </FrameLayout>
 
                 <com.fly.customizer.ui.animations.CurveView
                     android:id="@+id/curveView"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="110dp"
                     android:layout_marginTop="12dp" />
 
                 <TextView
@@ -59,45 +92,17 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/presetGroup"
+        <TextView
+            style="@style/Fly.Section"
+            android:layout_marginTop="4dp"
+            android:text="@string/presets_label" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/presetList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:selectionRequired="true"
-            app:singleSelection="true">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAnimSpring"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/anim_spring" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAnimOrbit"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/anim_orbit" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAnimWave"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/anim_wave" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAnimFlip"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/anim_flip" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+            android:clipToPadding="false"
+            android:orientation="horizontal" />
 
         <TextView
             android:id="@+id/txtSpeed"

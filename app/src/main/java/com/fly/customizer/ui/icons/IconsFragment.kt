@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Icon pack browser: detects packs, parses appfilter.xml and pins themed shortcuts.
+ * Icon pack browser: detects packs, parses appfilter.xml, searches apps and pins shortcuts.
  */
 class IconsFragment : Fragment() {
 
@@ -32,6 +33,7 @@ class IconsFragment : Fragment() {
     private lateinit var appAdapter: AppIconAdapter
 
     private var apps: List<IconPackLoader.AppEntry> = emptyList()
+    private var displayedApps: List<IconPackLoader.AppEntry> = emptyList()
     private var packs: List<IconPackLoader.IconPack> = emptyList()
     private var selectedPack: IconPackLoader.IconPack? = null
 
@@ -46,6 +48,7 @@ class IconsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         loader = IconPackLoader(requireContext().applicationContext)
 
         packAdapter = IconPackAdapter { pack -> selectPack(pack) }
@@ -56,6 +59,8 @@ class IconsFragment : Fragment() {
         appAdapter = AppIconAdapter { app -> pinShortcut(app) }
         binding.appIconList.layoutManager = GridLayoutManager(requireContext(), 4)
         binding.appIconList.adapter = appAdapter
+
+        binding.inputSearch.doAfterTextChanged { applySearchFilter() }
 
         loadPacks()
     }
@@ -79,7 +84,7 @@ class IconsFragment : Fragment() {
             if (packs.isEmpty()) {
                 binding.txtSelectedPack.text = getString(R.string.app_icons_label)
                 binding.txtCoverage.text = ""
-                appAdapter.submit(apps)
+                submitApps(apps)
                 return@launch
             }
             val remembered = FlyApp.repository.lastIconPack()
@@ -102,8 +107,24 @@ class IconsFragment : Fragment() {
             binding.iconProgress.isVisible = false
             val covered = themed.count { it.themedIcon != null }
             binding.txtCoverage.text = getString(R.string.coverage_label, covered, themed.size)
-            appAdapter.submit(themed)
+            submitApps(themed)
         }
+    }
+
+    private fun submitApps(entries: List<IconPackLoader.AppEntry>) {
+        displayedApps = entries
+        applySearchFilter()
+    }
+
+    private fun applySearchFilter() {
+        val query = binding.inputSearch.text?.toString()?.trim().orEmpty()
+        val filtered = if (query.isEmpty()) {
+            displayedApps
+        } else {
+            displayedApps.filter { it.label.contains(query, ignoreCase = true) }
+        }
+        appAdapter.submit(filtered)
+        binding.txtSearchEmpty.isVisible = filtered.isEmpty() && displayedApps.isNotEmpty()
     }
 
     private fun pinShortcut(app: IconPackLoader.AppEntry) {

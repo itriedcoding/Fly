@@ -16,8 +16,9 @@ No mock data, no placeholders: every screen reads from Android's own APIs.
 
 ## Download
 
-The signed APK is published under **Releases** (`v1.0.0`, certificate `CN=Fly`). Verify it with
-`SHA256SUMS.txt`. Sideload it after allowing installs from unknown sources.
+The signed APK is published under **Releases** (latest `v1.1.0`, certificate `CN=Fly`). Verify it
+with `SHA256SUMS.txt`. Sideload it after allowing installs from unknown sources. The app's own
+Settings → App updates checks the release page for newer builds.
 
 ## Features
 
@@ -25,11 +26,19 @@ The signed APK is published under **Releases** (`v1.0.0`, certificate `CN=Fly`).
 - Eight generative recipes (Aurora, Ember, Mint, Midnight, Rosewater, Solar, Glacier, Void).
 - Gradients are rendered pixel by pixel in C++ (`generateGradient`) with an optional separable
   box blur; the "Remix hue" button rotates the palette in real HSV space.
+- **Shuffle** picks a random recipe with a random hue shift and applies it in one tap.
+- **Favourites filter** narrows the grid to starred wallpapers only.
+- **Long-press** exports the wallpaper to `Pictures/Fly` through MediaStore (Android 10+).
 - Applying uses `WallpaperManager.setBitmap(...)` with `FLAG_SYSTEM`, `FLAG_LOCK` or both.
 - Favourites and apply history are stored in SQLite.
 
 ### Theme studio
-- Three base surfaces (Light, Dark, AMOLED) and six accent colours.
+- Three base surfaces (Light, Dark, AMOLED) and **twelve accent colours**.
+- **Sixteen stock themes** (Obsidian, Midnight ink, Aurora, Neon Tokyo, Ember, Cyber lime,
+  Carbon, Ocean deep, Plum noir, Mint frost, Paper violet, Sunrise, Glacier light, Blossom,
+  Sandstone, Blueprint) applied with a single tap.
+- **Match wallpaper**: samples the live wallpaper, runs native dominant-colour extraction and
+  picks the closest accent.
 - Accents are real theme overlays applied with `Theme.applyStyle()` before content inflation, so
   every Material widget picks them up.
 - System dynamic colour is available on Android 12+.
@@ -40,6 +49,7 @@ The signed APK is published under **Releases** (`v1.0.0`, certificate `CN=Fly`).
   (`org.adw.launcher.THEMES`, `com.gau.go.launcherex.theme`, `com.novalauncher.THEME`, …).
 - Icons are resolved from each pack's `appfilter.xml`, read either as a compiled XML resource or
   from the pack's assets, using the pack's own `Resources`.
+- Live **app search** filters the themed grid by name.
 - Tapping an app pins a home-screen shortcut using the pack's artwork (`ShortcutManager` on
   Android 8+, legacy `INSTALL_SHORTCUT` broadcast below that).
 
@@ -49,9 +59,17 @@ The signed APK is published under **Releases** (`v1.0.0`, certificate `CN=Fly`).
 - "Pin" issues a real `requestPinAppWidget` request when the launcher supports it.
 
 ### Animation studio
-- Four motion presets (Spring, Orbit, Wave, Flip) driven by real `ObjectAnimator`/`AnimatorSet`.
+- **Twelve presets**: Spring, Orbit, Wave, Flip, Slide, Zoom, Drop, Shake, Pendulum, Jelly,
+  Spiral and Stagger (three dots entering in sequence), all driven by real
+  `ObjectAnimator`/`AnimatorSet`.
 - `CurveView` (Java, custom `View`) plots the exact `TimeInterpolator` curve with a live marker.
 - Speed slider scales the duration (0.25×–3×) and is persisted.
+
+### Updates
+- Settings checks the public GitHub Releases API (`UpdateChecker`), compares the tag against
+  `BuildConfig.VERSION_NAME` with a numeric version comparison, and offers **Download update**
+  (the APK asset) or **Open releases page** when GitHub cannot be reached.
+- No account or token is needed; the check uses the public unauthenticated endpoint.
 
 ### Dashboard
 - Device model, Android version/API level, resolution, density bucket, default launcher,

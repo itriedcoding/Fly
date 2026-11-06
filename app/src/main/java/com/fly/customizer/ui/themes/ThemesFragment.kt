@@ -8,18 +8,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fly.customizer.FlyApp
 import com.fly.customizer.R
-import com.fly.customizer.core.AccentSpec
 import com.fly.customizer.core.BaseMode
 import com.fly.customizer.core.Prefs
 import com.fly.customizer.core.ThemeCatalog
+import com.fly.customizer.core.ThemePreset
 import com.fly.customizer.data.CustomTheme
 import com.fly.customizer.databinding.FragmentThemesBinding
+import com.fly.customizer.util.WallpaperAccent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
- * Theme studio: base surface, accent colour, dynamic colour and saved themes in SQLite.
+ * Theme studio: base surface, twelve accents, sixteen stock themes, wallpaper matching
+ * and user themes stored in SQLite.
  */
 class ThemesFragment : Fragment() {
 
@@ -28,6 +35,7 @@ class ThemesFragment : Fragment() {
 
     private lateinit var prefs: Prefs
     private lateinit var accentAdapter: AccentAdapter
+    private lateinit var stockAdapter: StockThemeAdapter
     private lateinit var savedAdapter: SavedThemeAdapter
     private var suppressCallbacks = true
 
@@ -80,6 +88,16 @@ class ThemesFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.accentList.adapter = accentAdapter
 
+        stockAdapter = StockThemeAdapter(
+            presets = ThemeCatalog.stockThemes,
+            selectedId = currentStockThemeId(),
+            onSelect = { preset -> applyStockTheme(preset) },
+        )
+        binding.stockThemeList.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.stockThemeList.adapter = stockAdapter
+
+        binding.btnMatchWallpaper.setOnClickListener { matchWallpaperAccent() }
+
         savedAdapter = SavedThemeAdapter(
             onApply = { theme -> applyTheme(theme) },
             onDelete = { theme -> deleteTheme(theme) },
@@ -93,16 +111,58 @@ class ThemesFragment : Fragment() {
         binding.root.post { suppressCallbacks = false }
     }
 
+    private fun currentStockThemeId(): String? = ThemeCatalog.stockThemes
+        .firstOrNull { it.baseMode.id == prefs.baseMode && it.accentId == prefs.accentId }
+        ?.id
+
     private fun applyAndRecreate() {
         suppressCallbacks = true
         activity?.recreate()
     }
 
+    private fun applyStockTheme(preset: ThemePreset) {
+        prefs.baseMode = preset.baseMode.id
+        prefs.accentId = preset.accentId
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.stock_theme_applied, getString(preset.labelRes)),
+            Toast.LENGTH_SHORT,
+        ).show()
+        applyAndRecreate()
+    }
+
+    private fun matchWallpaperAccent() {
+        binding.btnMatchWallpaper.isEnabled = false
+        binding.btnMatchWallpaper.setText(R.string.loading)
+        val context = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            val color = withContext(Dispatchers.IO) { WallpaperAccent.dominantColor(context) }
+            if (_binding == null) return@launch
+            binding.btnMatchWallpaper.isEnabled = true
+            binding.btnMatchWallpaper.setText(R.string.btn_match_wallpaper)
+            if (color == null) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.accent_wallpaper_failed,
+                    Toast.LENGTH_LONG,
+                ).show()
+                return@launch
+            }
+            val accent = ThemeCatalog.nearestAccent(color)
+            prefs.accentId = accent.id
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.accent_wallpaper_applied, getString(accent.labelRes)),
+                Toast.LENGTH_SHORT,
+            ).show()
+            applyAndRecreate()
+        }
+    }
+
     private fun applyTheme(theme: CustomTheme) {
         prefs.baseMode = theme.baseMode
         prefs.accentId = theme.accentId
-        suppressCallbacks = true
-        activity?.recreate()
+        applyAndRecreate()
     }
 
     private fun saveTheme() {

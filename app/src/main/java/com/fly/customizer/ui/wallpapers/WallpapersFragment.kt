@@ -20,9 +20,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 /**
- * Wallpaper studio: remix the palette, choose the target surface and apply for real.
+ * Wallpaper studio: apply, remix, shuffle, gallery export and favourites.
  */
 class WallpapersFragment : Fragment() {
 
@@ -33,6 +34,7 @@ class WallpapersFragment : Fragment() {
     private lateinit var adapter: WallpaperAdapter
     private var hueShift = 0f
     private var applying = false
+    private var lastAppliedId: String? = null
     private var favorites: Set<String> = emptySet()
 
     override fun onCreateView(
@@ -55,10 +57,11 @@ class WallpapersFragment : Fragment() {
             scope = viewLifecycleOwner.lifecycleScope,
             onApply = { preset -> applyWallpaper(preset) },
             onFavorite = { preset -> toggleFavorite(preset) },
+            onSave = { preset -> saveWallpaper(preset) },
         )
         binding.wallpaperGrid.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.wallpaperGrid.adapter = adapter
-        adapter.submit(WallpaperStudio.presets, hueShift, favorites)
+        refreshGrid()
 
         binding.targetGroup.check(
             when (prefs.wallpaperTarget) {
@@ -81,8 +84,11 @@ class WallpapersFragment : Fragment() {
             prefs.hueShift = hueShift
             ThumbnailCache.clear()
             updateHueLabel()
-            adapter.notifyDataSetChanged()
+            refreshGrid()
         }
+
+        binding.btnShuffle.setOnClickListener { shuffle() }
+        binding.chipFavorites.setOnCheckedChangeListener { _, _ -> refreshGrid() }
 
         updateHueLabel()
     }
@@ -91,9 +97,20 @@ class WallpapersFragment : Fragment() {
         binding.txtHueShift.text = getString(R.string.hue_shift_value, hueShift.roundToInt())
     }
 
+    private fun refreshGrid() {
+        val presets = if (binding.chipFavorites.isChecked) {
+            WallpaperStudio.presets.filter { favorites.contains(it.id) }
+        } else {
+            WallpaperStudio.presets
+        }
+        adapter.submit(presets, hueShift, favorites)
+        binding.txtWallpapersEmpty.isVisible = presets.isEmpty()
+    }
+
     private fun applyWallpaper(preset: WallpaperPreset) {
         if (applying) return
         applying = true
+        lastAppliedId = preset.id
         binding.applyProgress.isVisible = true
         val context = requireContext().applicationContext
         val target = prefs.wallpaperTarget
@@ -122,10 +139,47 @@ class WallpapersFragment : Fragment() {
         }
     }
 
+    private fun shuffle() {
+        val preset = WallpaperStudio.randomPreset(lastAppliedId)
+        hueShift = 15f * Random.nextInt(0, 24)
+        prefs.hueShift = hueShift
+        ThumbnailCache.clear()
+        updateHueLabel()
+        refreshGrid()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.shuffled_to, getString(preset.labelRes)),
+            Toast.LENGTH_SHORT,
+        ).show()
+        applyWallpaper(preset)
+    }
+
+    private fun saveWallpaper(preset: WallpaperPreset) {
+        val context = requireContext().applicationContext
+        val shift = hueShift
+        viewLifecycleOwner.lifecycleScope.launch {
+            val size = WallpaperStudio.suggestedSize(context)
+            val bitmap = withContext(Dispatchers.Default) {
+                WallpaperStudio.render(preset, size.first, size.second, shift)
+            }
+            val result = withContext(Dispatchers.IO) {
+                WallpaperStudio.saveToGallery(context, bitmap, "Fly-${preset.id}")
+            }
+            bitmap.recycle()
+            if (!isAdded) return@launch
+            val message = when (result) {
+                WallpaperStudio.SaveResult.SAVED -> R.string.saved_to_gallery
+                WallpaperStudio.SaveResult.UNSUPPORTED -> R.string.save_needs_android10
+                WallpaperStudio.SaveResult.FAILED -> R.string.save_failed
+            }
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun toggleFavorite(preset: WallpaperPreset) {
         val added = FlyApp.repository.toggleFavorite(preset.id, hueShift, getString(preset.labelRes))
         favorites = loadFavorites()
-        adapter.submit(WallpaperStudio.presets, hueShift, favorites)
+        refreshGrid()
         Toast.makeText(
             requireContext(),
             if (added) R.string.favorite_added else R.string.favorite_removed,

@@ -84,6 +84,14 @@ object ColorMath {
             0xFFFFFFFF.toInt()
         }
 
+    /** Perceptually weighted RGB distance, useful for nearest-colour matching. */
+    fun distance(a: Int, b: Int): Float {
+        val dr = (((a shr 16) and 0xFF) - ((b shr 16) and 0xFF)).toFloat()
+        val dg = (((a shr 8) and 0xFF) - ((b shr 8) and 0xFF)).toFloat()
+        val db = ((a and 0xFF) - (b and 0xFF)).toFloat()
+        return dr * dr * 0.3f + dg * dg * 0.59f + db * db * 0.11f
+    }
+
     fun toHex(argb: Int): String =
         String.format("#%06X", argb and 0xFFFFFF)
 }

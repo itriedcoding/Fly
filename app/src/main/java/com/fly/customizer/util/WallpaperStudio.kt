@@ -1,12 +1,17 @@
 package com.fly.customizer.util
 
 import android.app.WallpaperManager
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import com.fly.customizer.R
 import com.fly.customizer.core.Prefs
 import kotlin.math.max
+import kotlin.random.Random
 
 /**
  * A generative wallpaper recipe: palette, gradient style and grain.
@@ -147,6 +152,64 @@ object WallpaperStudio {
             Log.e(TAG, "Wallpaper bitmap too large", error)
             false
         }
+    }
+
+    /** Result of trying to write a wallpaper into the gallery. */
+    enum class SaveResult { SAVED, UNSUPPORTED, FAILED }
+
+    /** Writes the bitmap to `Pictures/Fly` through MediaStore (Android 10+). */
+    fun saveToGallery(context: Context, bitmap: Bitmap, baseName: String): SaveResult {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return SaveResult.UNSUPPORTED
+        }
+        val resolver = context.contentResolver
+        val values = ContentValues().apply {
+            put(
+                MediaStore.Images.Media.DISPLAY_NAME,
+                "$baseName-${System.currentTimeMillis()}.png",
+            )
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(
+                MediaStore.Images.Media.RELATIVE_PATH,
+                "${Environment.DIRECTORY_PICTURES}/Fly",
+            )
+            put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
+        val uri = try {
+            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        } catch (error: Exception) {
+            Log.e(TAG, "Unable to create gallery entry", error)
+            null
+        } ?: return SaveResult.FAILED
+
+        return try {
+            val stream = resolver.openOutputStream(uri)
+                ?: return SaveResult.FAILED
+            stream.use { output ->
+                if (!bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)) {
+                    return SaveResult.FAILED
+                }
+            }
+            val publish = ContentValues().apply {
+                put(MediaStore.Images.Media.IS_PENDING, 0)
+            }
+            resolver.update(uri, publish, null, null)
+            SaveResult.SAVED
+        } catch (error: Exception) {
+            Log.e(TAG, "Unable to write wallpaper to gallery", error)
+            try {
+                resolver.delete(uri, null, null)
+            } catch (ignored: Exception) {
+                // Nothing else to clean up.
+            }
+            SaveResult.FAILED
+        }
+    }
+
+    /** A random preset, optionally avoiding one the caller just applied. */
+    fun randomPreset(excludeId: String? = null): WallpaperPreset {
+        val candidates = presets.filter { it.id != excludeId }.ifEmpty { presets }
+        return candidates[Random.nextInt(candidates.size)]
     }
 
     fun isLockScreenSupported(context: Context): Boolean {

@@ -100,6 +100,37 @@
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:orientation="horizontal" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMatchWallpaper"
+                    style="@style/Fly.OutlinedButton"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/btn_match_wallpaper" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Fly.Card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Fly.Section"
+                    android:text="@string/stock_themes_label" />
+
+                <TextView
+                    style="@style/Fly.Caption"
+                    android:text="@string/stock_themes_hint" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/stockThemeList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:nestedScrollingEnabled="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

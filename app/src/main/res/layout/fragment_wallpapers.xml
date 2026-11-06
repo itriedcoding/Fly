@@ -29,24 +29,29 @@
             style="@style/Fly.OutlinedButton"
             android:text="@string/btn_remix" />
 
-        <TextView
-            android:id="@+id/txtHueShift"
-            style="@style/Fly.Caption"
-            android:layout_width="0dp"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnShuffle"
+            style="@style/Fly.OutlinedButton"
+            android:layout_marginStart="8dp"
+            android:text="@string/btn_shuffle" />
 
         <ProgressBar
             android:id="@+id/applyProgress"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="10dp"
             android:indeterminateTint="?attr/colorPrimary"
             android:visibility="gone" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/txtHueShift"
+        style="@style/Fly.Caption"
+        android:layout_marginTop="4dp" />
+
+    <TextView
         style="@style/Fly.Section"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:text="@string/apply_target_label" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
@@ -81,11 +86,41 @@
             android:text="@string/target_lock" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFavorites"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="@string/btn_favorites" />
+
+        <TextView
+            style="@style/Fly.Caption"
+            android:layout_width="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="@string/hint_long_press_save" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtWallpapersEmpty"
+        style="@style/Fly.Body"
+        android:layout_marginTop="10dp"
+        android:text="@string/wallpapers_empty_favorites"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wallpaperGrid"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingBottom="10dp" />

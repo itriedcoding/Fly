@@ -3,7 +3,6 @@ package com.fly.customizer.ui.wallpapers
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.fly.customizer.R
 import com.fly.customizer.databinding.ItemWallpaperBinding
@@ -16,12 +15,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Renders wallpaper previews natively and reports apply/favourite taps.
+ * Renders wallpaper previews natively and reports apply, favourite and save gestures.
  */
 class WallpaperAdapter(
     private val scope: CoroutineScope,
     private val onApply: (WallpaperPreset) -> Unit,
     private val onFavorite: (WallpaperPreset) -> Unit,
+    private val onSave: (WallpaperPreset) -> Unit,
 ) : RecyclerView.Adapter<WallpaperAdapter.Holder>() {
 
     private data class Item(
@@ -61,11 +61,13 @@ class WallpaperAdapter(
             },
         )
         binding.root.setOnClickListener { onApply(item.preset) }
+        binding.root.setOnLongClickListener {
+            onSave(item.preset)
+            true
+        }
         binding.btnFavorite.setOnClickListener { onFavorite(item.preset) }
 
-        val key = ThumbnailCache.key(
-            item.preset.id, item.hueShift, WIDTH, HEIGHT,
-        )
+        val key = ThumbnailCache.key(item.preset.id, item.hueShift, WIDTH, HEIGHT)
         holder.pendingKey = key
         val cached = ThumbnailCache.get(key)
         if (cached != null && !cached.isRecycled) {
@@ -80,7 +82,6 @@ class WallpaperAdapter(
                 ).also { ThumbnailCache.put(key, it) }
             }
             if (holder.pendingKey == key && !bitmap.isRecycled) {
-                binding.imagePreview.isVisible = true
                 binding.imagePreview.setImageBitmap(bitmap)
             }
         }

@@ -143,4 +143,81 @@
     <string name="about_body">Fly is a Kotlin, Java, XML, SQLite and C/C++ Android customization studio. All wallpapers are generated on device by libflycore.so — nothing is downloaded and no mock data is used.</string>
     <string name="btn_open_themes">Open theme studio</string>
     <string name="build_value">%1$s (%2$d)</string>
+    <!-- Extra accents -->
+    <string name="accent_teal">Teal</string>
+    <string name="accent_coral">Coral</string>
+    <string name="accent_orchid">Orchid</string>
+    <string name="accent_slate">Slate</string>
+    <string name="accent_sand">Sand</string>
+    <string name="accent_crimson">Crimson</string>
+
+    <!-- Stock themes -->
+    <string name="stock_themes_label">Stock themes</string>
+    <string name="stock_themes_hint">Sixteen ready-made combinations. Tap one to apply it instantly.</string>
+    <string name="stock_theme_applied">%1$s applied</string>
+    <string name="theme_obsidian">Obsidian</string>
+    <string name="theme_midnight_ink">Midnight ink</string>
+    <string name="theme_aurora_dark">Aurora</string>
+    <string name="theme_neon_tokyo">Neon Tokyo</string>
+    <string name="theme_ember_theme">Ember</string>
+    <string name="theme_cyber_lime">Cyber lime</string>
+    <string name="theme_carbon">Carbon</string>
+    <string name="theme_ocean_deep">Ocean deep</string>
+    <string name="theme_plum_noir">Plum noir</string>
+    <string name="theme_mint_frost">Mint frost</string>
+    <string name="theme_paper_violet">Paper violet</string>
+    <string name="theme_sunrise_theme">Sunrise</string>
+    <string name="theme_glacier_light">Glacier light</string>
+    <string name="theme_blossom">Blossom</string>
+    <string name="theme_sandstone">Sandstone</string>
+    <string name="theme_blueprint">Blueprint</string>
+    <string name="btn_match_wallpaper">Match wallpaper</string>
+    <string name="accent_wallpaper_applied">Accent matched to your wallpaper: %1$s</string>
+    <string name="accent_wallpaper_failed">Could not read the current wallpaper</string>
+
+    <!-- Extra animations -->
+    <string name="anim_slide">Slide</string>
+    <string name="anim_zoom">Zoom</string>
+    <string name="anim_drop">Drop</string>
+    <string name="anim_shake">Shake</string>
+    <string name="anim_pendulum">Pendulum</string>
+    <string name="anim_jelly">Jelly</string>
+    <string name="anim_spiral">Spiral</string>
+    <string name="anim_stagger">Stagger</string>
+    <string name="presets_label">Presets</string>
+    <string name="preset_info_slide">Horizontal slide with fade — fast-out linear.</string>
+    <string name="preset_info_zoom">Scale up from 60% — decelerate.</string>
+    <string name="preset_info_drop">Falls from above with overshoot.</string>
+    <string name="preset_info_shake">Side-to-side shake — linear steps.</string>
+    <string name="preset_info_pendulum">Swinging rotation — anticipate overshoot.</string>
+    <string name="preset_info_jelly">Squash and stretch on both axes.</string>
+    <string name="preset_info_spiral">Rotation plus translation — decelerate.</string>
+    <string name="preset_info_stagger">Three dots entering in sequence.</string>
+
+    <!-- Wallpaper extras -->
+    <string name="btn_shuffle">Shuffle</string>
+    <string name="btn_favorites">Favourites</string>
+    <string name="hint_long_press_save">Long-press a wallpaper to save it to Pictures/Fly.</string>
+    <string name="saved_to_gallery">Saved to Pictures/Fly</string>
+    <string name="save_failed">Could not save the wallpaper</string>
+    <string name="save_needs_android10">Saving to the gallery needs Android 10 or newer</string>
+    <string name="shuffled_to">Shuffled to %1$s</string>
+    <string name="wallpapers_empty_favorites">No favourites yet — tap the star on any wallpaper.</string>
+
+    <!-- Icon search -->
+    <string name="search_apps_hint">Search apps</string>
+    <string name="search_empty">No apps match that search.</string>
+
+    <!-- Updates -->
+    <string name="settings_updates">App updates</string>
+    <string name="update_current">Installed version %1$s</string>
+    <string name="update_checking">Checking GitHub releases…</string>
+    <string name="update_available">Update available: %1$s (you have %2$s)</string>
+    <string name="update_up_to_date">You are on the latest release (%1$s)</string>
+    <string name="update_unreachable">Could not reach GitHub. Installed version %1$s.</string>
+    <string name="update_check_button">Check for updates</string>
+    <string name="update_download">Download update</string>
+    <string name="update_open_releases">Open releases page</string>
+    <string name="update_no_browser">No app available to open the release page</string>
+    <string name="settings_version">Version</string>
 </resources>
