@@ -20,6 +20,23 @@
     <TextView
         style="@style/Fly.Section"
         android:layout_marginTop="14dp"
+        android:text="@string/fly_packs_label" />
+
+    <TextView
+        style="@style/Fly.Caption"
+        android:text="@string/fly_packs_hint" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/flyPackList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:clipToPadding="false"
+        android:orientation="horizontal" />
+
+    <TextView
+        style="@style/Fly.Section"
+        android:layout_marginTop="14dp"
         android:text="@string/packs_label" />
 
     <androidx.recyclerview.widget.RecyclerView

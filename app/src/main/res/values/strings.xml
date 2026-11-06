@@ -90,9 +90,9 @@
 
     <!-- Icons -->
     <string name="icons_title">Icon packs</string>
-    <string name="icons_subtitle">Packs are discovered through their theme intents; icons are resolved from each pack\'s appfilter.xml.</string>
-    <string name="packs_label">Installed packs</string>
-    <string name="packs_empty">No icon packs found on this device. Install one from the Play Store and reopen this tab.</string>
+    <string name="icons_subtitle">Use one of Fly\'s built-in packs — drawn on device for every app you have — or pick up a third-party pack through its theme intents and appfilter.xml.</string>
+    <string name="packs_label">Third-party packs on this device</string>
+    <string name="packs_empty">No third-party icon packs are installed. Fly\'s twelve built-in packs above still theme every app without installing anything.</string>
     <string name="coverage_label">%1$d of %2$d apps themed</string>
     <string name="selected_pack">Selected: %1$s</string>
     <string name="app_icons_label">Apps</string>
@@ -311,6 +311,25 @@
     <string name="custom_icon_saved">Custom icon saved for %1$s</string>
     <string name="custom_icon_failed">That image could not be used</string>
     <string name="custom_icon_removed">Custom icon removed for %1$s</string>
+
+    <!-- Built-in icon packs -->
+    <string name="fly_packs_label">Fly icon packs</string>
+    <string name="fly_packs_hint">Twelve packs, six shapes and twelve palettes, rendered on device from each app\'s own name. No download and no fake pack entries.</string>
+    <string name="fly_pack_meta">%1$d apps</string>
+    <string name="selected_fly_pack">Fly · %1$s</string>
+    <string name="fly_pack_applied">%1$s applied to %2$d apps</string>
+    <string name="fly_pack_aurora">Aurora</string>
+    <string name="fly_pack_midnight">Midnight</string>
+    <string name="fly_pack_neon">Neon</string>
+    <string name="fly_pack_pastel">Pastel</string>
+    <string name="fly_pack_mono">Mono</string>
+    <string name="fly_pack_sunset">Sunset</string>
+    <string name="fly_pack_forest">Forest</string>
+    <string name="fly_pack_ocean">Ocean</string>
+    <string name="fly_pack_candy">Candy</string>
+    <string name="fly_pack_slate">Slate</string>
+    <string name="fly_pack_copper">Copper</string>
+    <string name="fly_pack_cyber">Cyber</string>
     <string name="pin_shortcut">Pin shortcut</string>
 
     <!-- Widgets -->

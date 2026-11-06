@@ -19,6 +19,9 @@ import com.fly.customizer.R
 import com.fly.customizer.compat.HomeShortcutCompat
 import com.fly.customizer.databinding.FragmentIconsBinding
 import com.fly.customizer.util.CustomIconStore
+import com.fly.customizer.util.FlyIconPack
+import com.fly.customizer.util.FlyIconPacks
+import com.fly.customizer.util.FlyIconRenderer
 import com.fly.customizer.util.IconPackLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +29,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Icon browser: detects packs, parses appfilter.xml, searches apps, assigns user-picked custom
- * icons and pins themed shortcuts.
+ * Icon browser: Fly's built-in generative packs, detected third-party packs, app search,
+ * user-picked custom icons and themed shortcut pinning.
  */
 class IconsFragment : Fragment() {
 
@@ -36,12 +39,14 @@ class IconsFragment : Fragment() {
 
     private lateinit var loader: IconPackLoader
     private lateinit var packAdapter: IconPackAdapter
+    private lateinit var flyPackAdapter: FlyIconPackAdapter
     private lateinit var appAdapter: AppIconAdapter
 
     private var apps: List<IconPackLoader.AppEntry> = emptyList()
     private var displayedApps: List<IconPackLoader.AppEntry> = emptyList()
     private var packs: List<IconPackLoader.IconPack> = emptyList()
     private var selectedPack: IconPackLoader.IconPack? = null
+    private var selectedFlyPack: FlyIconPack? = null
     private var customIcons: Map<String, Bitmap> = emptyMap()
     private var pendingApp: IconPackLoader.AppEntry? = null
 
@@ -62,6 +67,17 @@ class IconsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loader = IconPackLoader(requireContext().applicationContext)
+
+        flyPackAdapter = FlyIconPackAdapter { pack -> selectFlyPack(pack) }
+        binding.flyPackList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.flyPackList.adapter = flyPackAdapter
+        flyPackAdapter.submit(
+            FlyIconPacks.all,
+            FlyApp.prefs.flyIconPackId.takeIf { FlyApp.prefs.useFlyIconPack },
+            0,
+            getString(R.string.app_name),
+        )
 
         packAdapter = IconPackAdapter { pack -> selectPack(pack) }
         binding.packList.layoutManager =
@@ -100,6 +116,21 @@ class IconsFragment : Fragment() {
             binding.txtPacksEmpty.isVisible = packs.isEmpty()
             binding.packList.isVisible = packs.isNotEmpty()
             packAdapter.submit(packs, null)
+
+            val prefs = FlyApp.prefs
+            val sample = apps.firstOrNull()?.label ?: getString(R.string.app_name)
+            flyPackAdapter.submit(
+                FlyIconPacks.all,
+                prefs.flyIconPackId.takeIf { prefs.useFlyIconPack },
+                apps.size,
+                sample,
+            )
+
+            val rememberedFly = if (prefs.useFlyIconPack) FlyIconPacks.pack(prefs.flyIconPackId) else null
+            if (rememberedFly != null) {
+                selectFlyPack(rememberedFly, announce = false)
+                return@launch
+            }
 
             if (packs.isEmpty()) {
                 binding.txtSelectedPack.text = getString(R.string.app_icons_label)
@@ -192,8 +223,34 @@ class IconsFragment : Fragment() {
         toast(getString(R.string.custom_icon_removed, app.label))
     }
 
+    /** Applies one of Fly's built-in packs to every installed app in the grid. */
+    private fun selectFlyPack(pack: FlyIconPack, announce: Boolean = true) {
+        selectedFlyPack = pack
+        selectedPack = null
+        appAdapter.flyPack = pack
+        FlyApp.prefs.useFlyIconPack = true
+        FlyApp.prefs.flyIconPackId = pack.id
+
+        if (_binding != null) {
+            flyPackAdapter.setSelected(pack.id)
+            packAdapter.clearSelection()
+            binding.txtSelectedPack.text =
+                getString(R.string.selected_fly_pack, getString(pack.labelRes))
+            binding.txtCoverage.text =
+                getString(R.string.coverage_label, apps.size, apps.size)
+            submitApps(apps)
+        }
+        if (announce) {
+            toast(getString(R.string.fly_pack_applied, getString(pack.labelRes), apps.size))
+        }
+    }
+
     private fun selectPack(pack: IconPackLoader.IconPack) {
         selectedPack = pack
+        selectedFlyPack = null
+        appAdapter.flyPack = null
+        FlyApp.prefs.useFlyIconPack = false
+        flyPackAdapter.setSelected(null)
         packAdapter.setSelected(pack.packageName)
         binding.txtSelectedPack.text = getString(R.string.selected_pack, pack.label)
         binding.iconProgress.isVisible = true
@@ -231,7 +288,17 @@ class IconsFragment : Fragment() {
         val custom = customIcons[app.component]?.takeIf { !it.isRecycled }?.let {
             BitmapDrawable(resources, it)
         }
-        val icon = custom ?: app.themedIcon ?: app.icon
+        val generated = if (custom == null) {
+            selectedFlyPack?.let { pack ->
+                BitmapDrawable(
+                    resources,
+                    FlyIconRenderer.render(pack, app.label, app.component, 216),
+                )
+            }
+        } else {
+            null
+        }
+        val icon = custom ?: generated ?: app.themedIcon ?: app.icon
         if (icon == null) {
             Toast.makeText(
                 requireContext(),
@@ -256,7 +323,8 @@ class IconsFragment : Fragment() {
                         Toast.LENGTH_LONG,
                     ).show()
                     if (success) {
-                        selectedPack?.let { FlyApp.repository.recordShortcutPin(it.packageName) }
+                        val packName = selectedPack?.packageName
+                        if (packName != null) FlyApp.repository.recordShortcutPin(packName)
                     }
                 }
             },

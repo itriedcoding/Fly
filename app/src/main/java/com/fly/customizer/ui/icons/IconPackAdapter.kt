@@ -28,6 +28,11 @@ class IconPackAdapter(
         notifyDataSetChanged()
     }
 
+    fun clearSelection() {
+        selectedPackage = null
+        notifyDataSetChanged()
+    }
+
     class Holder(val binding: ItemIconPackBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

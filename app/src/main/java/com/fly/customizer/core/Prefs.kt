@@ -69,6 +69,16 @@ class Prefs(context: Context) {
         get() = store.getBoolean(KEY_HAPTICS, true)
         set(value) = store.edit().putBoolean(KEY_HAPTICS, value).apply()
 
+    /** True when one of Fly's own generative icon packs is applied. */
+    var useFlyIconPack: Boolean
+        get() = store.getBoolean(KEY_USE_FLY_PACK, false)
+        set(value) = store.edit().putBoolean(KEY_USE_FLY_PACK, value).apply()
+
+    /** Id of the selected built-in Fly icon pack. */
+    var flyIconPackId: String
+        get() = store.getString(KEY_FLY_PACK_ID, "aurora") ?: "aurora"
+        set(value) = store.edit().putString(KEY_FLY_PACK_ID, value).apply()
+
     /** Smaller icons and tighter padding in the app grid. */
     var compactIcons: Boolean
         get() = store.getBoolean(KEY_COMPACT, false)
@@ -106,6 +116,8 @@ class Prefs(context: Context) {
         private const val KEY_REDUCE_MOTION = "reduce_motion"
         private const val KEY_HAPTICS = "haptics"
         private const val KEY_COMPACT = "compact_icons"
+        private const val KEY_USE_FLY_PACK = "use_fly_icon_pack"
+        private const val KEY_FLY_PACK_ID = "fly_icon_pack_id"
         private const val KEY_UPDATE_ON_LAUNCH = "update_on_launch"
 
         const val TARGET_BOTH = 0

@@ -16,7 +16,7 @@ No mock data, no placeholders: every screen reads from Android's own APIs.
 
 ## Download
 
-The signed APK is published under **Releases** (latest `v1.3.0`, certificate `CN=Fly`). Verify it
+The signed APK is published under **Releases** (latest `v1.4.0`, certificate `CN=Fly`). Verify it
 with `SHA256SUMS.txt`. Sideload it after allowing installs from unknown sources. The app's own
 Settings → App updates checks the release page for newer builds.
 
@@ -56,7 +56,15 @@ Settings → App updates checks the release page for newer builds.
 - Named theme combinations are saved to and read back from SQLite.
 
 ### Icon packs
-- Packs are discovered through the standard theme intent actions
+- **Twelve built-in packs** (Aurora, Midnight, Neon, Pastel, Mono, Sunset, Forest, Ocean, Candy,
+  Slate, Copper, Cyber) across six shapes — circle, squircle, rounded square, hexagon, pentagon
+  and diamond — and twelve palettes. Every icon is drawn on device with Canvas from the app's own
+  label, a deterministic gradient angle derived from its component and the native luminance
+  function to pick a readable letter colour. Selecting a pack themes every installed app in the
+  grid and every shortcut pinned from Fly, and the choice survives restarts.
+- The built-in catalogue always renders, so the Icons tab is never empty even when the device has
+  no third-party pack installed.
+- Third-party packs are discovered through the standard theme intent actions
   (`org.adw.launcher.THEMES`, `com.gau.go.launcherex.theme`, `com.novalauncher.THEME`, …).
 - Icons are resolved from each pack's `appfilter.xml`, read either as a compiled XML resource or
   from the pack's assets, using the pack's own `Resources`.
@@ -200,7 +208,7 @@ app/src/main/java/com/fly/customizer/
 ├── widgets/WidgetPinReceiver.kt  App-widget pin success callback
 └── util/                      NativeFly, WallpaperStudio, AnimatedWallpaperCatalog,
                                LiveWallpaperController, BackupExporter, BackupImporter,
-                               StorageManager, CustomIconStore, IconPackLoader,
+                               StorageManager, CustomIconStore, FlyIconPacks, IconPackLoader,
                                AppFilterParser, ColorMath, DeviceInfo
 app/src/main/cpp/              C++ / C native engine
 app/src/main/res/              XML layouts, themes, strings, launcher icons

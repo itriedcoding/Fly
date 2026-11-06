@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.fly.customizer.databinding.ItemAppIconBinding
+import com.fly.customizer.util.FlyIconPack
+import com.fly.customizer.util.FlyIconRenderer
 import com.fly.customizer.util.IconPackLoader
 
 /**
@@ -19,6 +21,9 @@ class AppIconAdapter(
 
     private var apps: List<IconPackLoader.AppEntry> = emptyList()
     private var customIcons: Map<String, Bitmap> = emptyMap()
+
+    /** When set, icons are drawn by Fly's built-in pack instead of the system or a third party. */
+    var flyPack: FlyIconPack? = null
 
     /** Smaller icons for the five column layout. */
     var compact: Boolean = false
@@ -45,11 +50,16 @@ class AppIconAdapter(
         val app = apps[position]
         val binding = holder.binding
         binding.appLabel.text = app.label
+        val density = binding.root.resources.displayMetrics.density
+        val iconSize = ((if (compact) 40 else 52) * density).toInt()
         val custom = customIcons[app.component]
-        if (custom != null && !custom.isRecycled) {
-            binding.appIcon.setImageBitmap(custom)
-        } else {
-            binding.appIcon.setImageDrawable(app.themedIcon ?: app.icon)
+        val pack = flyPack
+        when {
+            custom != null && !custom.isRecycled -> binding.appIcon.setImageBitmap(custom)
+            pack != null -> binding.appIcon.setImageBitmap(
+                FlyIconRenderer.render(pack, app.label, app.component, iconSize),
+            )
+            else -> binding.appIcon.setImageDrawable(app.themedIcon ?: app.icon)
         }
         binding.root.setOnClickListener { onSelect(app) }
         binding.root.setOnLongClickListener {
@@ -60,8 +70,6 @@ class AppIconAdapter(
             true
         }
 
-        val density = binding.root.resources.displayMetrics.density
-        val iconSize = ((if (compact) 40 else 52) * density).toInt()
         binding.appIcon.layoutParams = binding.appIcon.layoutParams.apply {
             width = iconSize
             height = iconSize
