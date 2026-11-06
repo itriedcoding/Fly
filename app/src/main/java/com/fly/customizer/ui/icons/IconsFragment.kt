@@ -18,6 +18,7 @@ import com.fly.customizer.FlyApp
 import com.fly.customizer.R
 import com.fly.customizer.compat.HomeShortcutCompat
 import com.fly.customizer.databinding.FragmentIconsBinding
+import com.fly.customizer.util.BrandIcons
 import com.fly.customizer.util.CustomIconStore
 import com.fly.customizer.util.FlyIconPack
 import com.fly.customizer.util.FlyIconPacks
@@ -40,6 +41,7 @@ class IconsFragment : Fragment() {
     private lateinit var loader: IconPackLoader
     private lateinit var packAdapter: IconPackAdapter
     private lateinit var flyPackAdapter: FlyIconPackAdapter
+    private lateinit var brandAdapter: BrandIconAdapter
     private lateinit var appAdapter: AppIconAdapter
 
     private var apps: List<IconPackLoader.AppEntry> = emptyList()
@@ -67,6 +69,14 @@ class IconsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loader = IconPackLoader(requireContext().applicationContext)
+
+        brandAdapter = BrandIconAdapter {
+            selectFlyPack(FlyIconPacks.signatureBrandPack)
+        }
+        binding.brandList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.brandList.adapter = brandAdapter
+        brandAdapter.submit(BrandIcons.all)
 
         flyPackAdapter = FlyIconPackAdapter { pack -> selectFlyPack(pack) }
         binding.flyPackList.layoutManager =
@@ -292,7 +302,7 @@ class IconsFragment : Fragment() {
             selectedFlyPack?.let { pack ->
                 BitmapDrawable(
                     resources,
-                    FlyIconRenderer.render(pack, app.label, app.component, 216),
+                    FlyIconRenderer.render(pack, app.label, app.component, 216, app.packageName),
                 )
             }
         } else {

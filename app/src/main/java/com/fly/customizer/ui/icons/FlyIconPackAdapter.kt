@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fly.customizer.R
 import com.fly.customizer.databinding.ItemIconPackBinding
 import com.fly.customizer.util.FlyIconPack
+import com.fly.customizer.util.BrandIcons
 import com.fly.customizer.util.FlyIconPacks
 import com.fly.customizer.util.FlyIconRenderer
 import com.google.android.material.color.MaterialColors
@@ -48,8 +49,15 @@ class FlyIconPackAdapter(
         val pack = packs[position]
         val binding = holder.binding
         binding.packName.setText(pack.labelRes)
+        val brandSample = if (pack.brandAware) BrandIcons.brand("youtube") else null
         binding.packIcon.setImageBitmap(
-            FlyIconRenderer.render(pack, sampleLabel, "sample", 128),
+            FlyIconRenderer.render(
+                pack,
+                brandSample?.let { binding.root.context.getString(it.labelRes) } ?: sampleLabel,
+                brandSample?.id ?: "sample",
+                128,
+                brandSample?.packages?.first(),
+            ),
         )
         binding.packCount.text = binding.root.context.getString(R.string.fly_pack_meta, appCount)
 

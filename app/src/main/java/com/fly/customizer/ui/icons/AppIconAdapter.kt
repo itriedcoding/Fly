@@ -57,7 +57,7 @@ class AppIconAdapter(
         when {
             custom != null && !custom.isRecycled -> binding.appIcon.setImageBitmap(custom)
             pack != null -> binding.appIcon.setImageBitmap(
-                FlyIconRenderer.render(pack, app.label, app.component, iconSize),
+                FlyIconRenderer.render(pack, app.label, app.component, iconSize, app.packageName),
             )
             else -> binding.appIcon.setImageDrawable(app.themedIcon ?: app.icon)
         }

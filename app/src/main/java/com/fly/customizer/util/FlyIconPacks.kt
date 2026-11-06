@@ -18,12 +18,14 @@ import kotlin.math.sin
 /** Shape used by a built-in icon pack. */
 enum class IconShape { CIRCLE, SQUIRCLE, ROUNDED, HEXAGON, PENTAGON, DIAMOND }
 
+/** How a brand-aware pack paints the matched app instead of a monogram. */
+enum class BrandTreatment { SIGNATURE, DARK, LIGHT, MONO }
+
 /**
  * A built-in Fly icon pack.
  *
- * Every icon is drawn on device from the app's own label and a stable hash of its component, so
- * these packs theme real installed apps without shipping hundreds of static PNGs and without
- * pretending a third-party pack is installed.
+ * Brand-aware packs use the stylised glyphs in [BrandIcons] for the twelve supported apps and fall
+ * back to an on-device monogram for everything else.
  */
 data class FlyIconPack(
     val id: String,
@@ -31,13 +33,15 @@ data class FlyIconPack(
     val palette: IntArray,
     val shape: IconShape,
     val outline: Boolean = false,
+    val brandAware: Boolean = false,
+    val treatment: BrandTreatment = BrandTreatment.SIGNATURE,
 ) {
     override fun equals(other: Any?): Boolean = other is FlyIconPack && other.id == id
     override fun hashCode(): Int = id.hashCode()
 }
 
 /**
- * The built-in pack catalogue: twelve packs across six shapes and twelve palettes.
+ * The built-in pack catalogue: twelve palette packs plus four brand-aware packs.
  */
 object FlyIconPacks {
 
@@ -115,6 +119,38 @@ object FlyIconPacks {
             palette = intArrayOf(0xFF02040A.toInt(), 0xFF10265C.toInt(), 0xFF5A8CFF.toInt()),
             shape = IconShape.DIAMOND,
         ),
+        FlyIconPack(
+            id = "signature",
+            labelRes = R.string.fly_pack_signature,
+            palette = intArrayOf(0xFF141420.toInt(), 0xFF3E3E58.toInt(), 0xFFB8B8D0.toInt()),
+            shape = IconShape.SQUIRCLE,
+            brandAware = true,
+            treatment = BrandTreatment.SIGNATURE,
+        ),
+        FlyIconPack(
+            id = "brand_dark",
+            labelRes = R.string.fly_pack_brand_dark,
+            palette = intArrayOf(0xFF07070C.toInt(), 0xFF1B1B26.toInt(), 0xFF3A3A4C.toInt()),
+            shape = IconShape.HEXAGON,
+            brandAware = true,
+            treatment = BrandTreatment.DARK,
+        ),
+        FlyIconPack(
+            id = "brand_light",
+            labelRes = R.string.fly_pack_brand_light,
+            palette = intArrayOf(0xFFF7F7FC.toInt(), 0xFFDCDCE8.toInt(), 0xFF8A8AA0.toInt()),
+            shape = IconShape.ROUNDED,
+            brandAware = true,
+            treatment = BrandTreatment.LIGHT,
+        ),
+        FlyIconPack(
+            id = "brand_mono",
+            labelRes = R.string.fly_pack_brand_mono,
+            palette = intArrayOf(0xFF111114.toInt(), 0xFF2E2E38.toInt(), 0xFF6E6E80.toInt()),
+            shape = IconShape.DIAMOND,
+            brandAware = true,
+            treatment = BrandTreatment.MONO,
+        ),
     )
 
     fun pack(id: String?): FlyIconPack? = all.firstOrNull { it.id == id }
@@ -122,30 +158,46 @@ object FlyIconPacks {
     fun packOrDefault(id: String?): FlyIconPack = pack(id) ?: all.first()
 
     val shapeCount: Int get() = IconShape.values().size
+
+    val brandPacks: List<FlyIconPack> get() = all.filter { it.brandAware }
+
+    val signatureBrandPack: FlyIconPack get() = pack("signature") ?: all.first()
 }
 
 /**
- * Draws icon-pack artwork with Canvas: gradient fill, soft highlight, a shape mask and the app's
- * own monogram. Colours are chosen with the native luminance function so the letter always has
- * real contrast against its background.
+ * Draws icon-pack artwork with Canvas: gradient fill, soft highlight, a shape mask and either the
+ * app's own monogram or a stylised brand glyph. Colours are checked with the native luminance
+ * function so the artwork always has real contrast.
  */
 object FlyIconRenderer {
 
-    private val cache = object : LruCache<String, Bitmap>(80) {
+    private const val DARK_INK = 0xFF15151E.toInt()
+
+    private val cache = object : LruCache<String, Bitmap>(96) {
         override fun sizeOf(key: String, value: Bitmap): Int = 1
     }
 
-    fun render(pack: FlyIconPack, label: String, key: String, sizePx: Int): Bitmap {
+    private data class IconTheme(val background: IntArray, val glyph: Int, val detail: Int)
+
+    fun render(
+        pack: FlyIconPack,
+        label: String,
+        key: String,
+        sizePx: Int,
+        packageName: String? = null,
+    ): Bitmap {
         val size = sizePx.coerceIn(48, 512)
-        val cacheKey = "${pack.id}:$key:$size"
+        val brand = if (pack.brandAware) BrandIcons.find(packageName) else null
+        val cacheKey = "${pack.id}:${brand?.id ?: "-"}:$key:$size"
         cache.get(cacheKey)?.takeIf { !it.isRecycled }?.let { return it }
 
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
+        val theme = themeFor(pack, brand)
         val strokeWidth = size * 0.045f
         val path = shapePath(pack.shape, size.toFloat(), if (pack.outline) strokeWidth else 0f)
 
-        val seed = key.hashCode()
+        val seed = (brand?.primary ?: key.hashCode())
         val angle = 25.0 + (seed and 0x7F) * 2.0
         val radians = Math.toRadians(angle)
         val dx = (cos(radians) * size * 0.5).toFloat()
@@ -159,7 +211,7 @@ object FlyIconRenderer {
             size / 2f - dy,
             size / 2f + dx,
             size / 2f + dy,
-            pack.palette,
+            theme.background,
             null,
             Shader.TileMode.CLAMP,
         )
@@ -186,23 +238,25 @@ object FlyIconRenderer {
             Paint(Paint.ANTI_ALIAS_FLAG).apply { shader = highlight },
         )
 
-        val midColor = pack.palette[1]
-        val ink = if (NativeFly.luminance(midColor) > 0.55f) 0xFF15151E.toInt() else Color.WHITE
-        val letterPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = ink
-            textAlign = Paint.Align.CENTER
-            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            textSize = size * 0.44f
-            setShadowLayer(
-                size * 0.02f,
-                0f,
-                size * 0.012f,
-                if (ink == Color.WHITE) 0x55000000 else 0x33000000,
-            )
+        if (brand != null) {
+            BrandGlyphRenderer.draw(canvas, brand.glyph, theme.glyph, theme.detail, size.toFloat())
+        } else {
+            val letterPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = theme.glyph
+                textAlign = Paint.Align.CENTER
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                textSize = size * 0.44f
+                setShadowLayer(
+                    size * 0.02f,
+                    0f,
+                    size * 0.012f,
+                    if (theme.glyph == Color.WHITE) 0x55000000 else 0x33000000,
+                )
+            }
+            val metrics = letterPaint.fontMetrics
+            val baseline = size / 2f - (metrics.ascent + metrics.descent) / 2f
+            canvas.drawText(monogram(label), size / 2f, baseline, letterPaint)
         }
-        val metrics = letterPaint.fontMetrics
-        val baseline = size / 2f - (metrics.ascent + metrics.descent) / 2f
-        canvas.drawText(monogram(label), size / 2f, baseline, letterPaint)
         canvas.restore()
 
         if (pack.outline) {
@@ -212,7 +266,7 @@ object FlyIconRenderer {
                     style = Paint.Style.STROKE
                     this.strokeWidth = strokeWidth
                     strokeJoin = Paint.Join.ROUND
-                    color = if (ink == Color.WHITE) 0x66FFFFFF else 0x5515151E
+                    color = withAlpha(theme.detail, 0x66)
                 },
             )
         }
@@ -223,10 +277,61 @@ object FlyIconRenderer {
 
     fun clear() = cache.evictAll()
 
+    private fun themeFor(pack: FlyIconPack, brand: BrandIcon?): IconTheme {
+        if (brand == null) {
+            val ink = if (NativeFly.luminance(pack.palette[1]) > 0.55f) DARK_INK else Color.WHITE
+            return IconTheme(pack.palette, ink, ink)
+        }
+        return when (pack.treatment) {
+            BrandTreatment.SIGNATURE -> {
+                val background = intArrayOf(
+                    brand.primary,
+                    mix(brand.primary, brand.secondary, 0.45f),
+                    brand.secondary,
+                )
+                val ink = if (NativeFly.luminance(background[1]) > 0.55f) DARK_INK else Color.WHITE
+                IconTheme(background, ink, withAlpha(ink, 0x55))
+            }
+            BrandTreatment.DARK -> IconTheme(
+                intArrayOf(0xFF07070C.toInt(), 0xFF141420.toInt(), brand.primary),
+                Color.WHITE,
+                brand.secondary,
+            )
+            BrandTreatment.LIGHT -> {
+                val ink = darken(brand.primary, 0.45f)
+                IconTheme(
+                    intArrayOf(0xFFF7F7FC.toInt(), 0xFFE8E8F2.toInt(), lighten(brand.secondary, 0.6f)),
+                    ink,
+                    withAlpha(ink, 0x55),
+                )
+            }
+            BrandTreatment.MONO -> IconTheme(
+                intArrayOf(0xFF111114.toInt(), 0xFF2A2A33.toInt(), 0xFF3E3E4A.toInt()),
+                Color.WHITE,
+                withAlpha(Color.WHITE, 0x66),
+            )
+        }
+    }
+
     private fun monogram(label: String): String {
         val letter = label.trim().firstOrNull { it.isLetterOrDigit() } ?: return "•"
         return letter.toString().uppercase()
     }
+
+    private fun mix(from: Int, to: Int, amount: Float): Int {
+        val t = amount.coerceIn(0f, 1f)
+        val red = (Color.red(from) + (Color.red(to) - Color.red(from)) * t).toInt()
+        val green = (Color.green(from) + (Color.green(to) - Color.green(from)) * t).toInt()
+        val blue = (Color.blue(from) + (Color.blue(to) - Color.blue(from)) * t).toInt()
+        return Color.rgb(red, green, blue)
+    }
+
+    private fun darken(color: Int, amount: Float): Int = mix(color, Color.BLACK, amount)
+
+    private fun lighten(color: Int, amount: Float): Int = mix(color, Color.WHITE, amount)
+
+    private fun withAlpha(color: Int, alpha: Int): Int =
+        (color and 0x00FFFFFF) or ((alpha and 0xFF) shl 24)
 
     private fun shapePath(shape: IconShape, size: Float, inset: Float): Path {
         val path = Path()

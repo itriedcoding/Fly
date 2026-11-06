@@ -16,7 +16,7 @@ No mock data, no placeholders: every screen reads from Android's own APIs.
 
 ## Download
 
-The signed APK is published under **Releases** (latest `v1.4.0`, certificate `CN=Fly`). Verify it
+The signed APK is published under **Releases** (latest `v1.5.0`, certificate `CN=Fly`). Verify it
 with `SHA256SUMS.txt`. Sideload it after allowing installs from unknown sources. The app's own
 Settings → App updates checks the release page for newer builds.
 
@@ -62,6 +62,14 @@ Settings → App updates checks the release page for newer builds.
   label, a deterministic gradient angle derived from its component and the native luminance
   function to pick a readable letter colour. Selecting a pack themes every installed app in the
   grid and every shortcut pinned from Fly, and the choice survives restarts.
+- **Four brand-aware packs** — Brand signature, Brand noir, Brand daylight and Brand mono — draw
+  stylised glyphs for twelve popular apps: TikTok, YouTube, Discord, Snapchat, X, Cash App,
+  Roblox, Spotify, Chime, Telegram, Gmail and Facebook. Matching uses the real package names
+  (`com.zhiliaoapp.musically`, `com.google.android.youtube`, `com.discord`, …), so an icon only
+  changes when that app is actually installed; every other app keeps its monogram.
+- The brand artwork is original, simplified vector work drawn with Canvas (music note, play
+  triangle, controller face, ghost, cross, dollar sign, block, waves, arc, paper plane, envelope,
+  letter f) with brand-associated colours — deliberately **not** the official trademarked logos.
 - The built-in catalogue always renders, so the Icons tab is never empty even when the device has
   no third-party pack installed.
 - Third-party packs are discovered through the standard theme intent actions
@@ -208,7 +216,8 @@ app/src/main/java/com/fly/customizer/
 ├── widgets/WidgetPinReceiver.kt  App-widget pin success callback
 └── util/                      NativeFly, WallpaperStudio, AnimatedWallpaperCatalog,
                                LiveWallpaperController, BackupExporter, BackupImporter,
-                               StorageManager, CustomIconStore, FlyIconPacks, IconPackLoader,
+                               StorageManager, CustomIconStore, FlyIconPacks, BrandIcons,
+                               BrandGlyphRenderer, IconPackLoader,
                                AppFilterParser, ColorMath, DeviceInfo
 app/src/main/cpp/              C++ / C native engine
 app/src/main/res/              XML layouts, themes, strings, launcher icons

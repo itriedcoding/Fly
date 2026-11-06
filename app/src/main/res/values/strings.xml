@@ -330,6 +330,26 @@
     <string name="fly_pack_slate">Slate</string>
     <string name="fly_pack_copper">Copper</string>
     <string name="fly_pack_cyber">Cyber</string>
+    <string name="fly_pack_signature">Brand signature</string>
+    <string name="fly_pack_brand_dark">Brand noir</string>
+    <string name="fly_pack_brand_light">Brand daylight</string>
+    <string name="fly_pack_brand_mono">Brand mono</string>
+
+    <!-- Brand icon previews -->
+    <string name="brand_icons_label">Brand icons</string>
+    <string name="brand_icons_hint">Stylised, original artwork for twelve popular apps, matched by their real package names. Tap any icon to apply the Brand signature pack.</string>
+    <string name="brand_tiktok">TikTok</string>
+    <string name="brand_youtube">YouTube</string>
+    <string name="brand_discord">Discord</string>
+    <string name="brand_snapchat">Snapchat</string>
+    <string name="brand_x">X</string>
+    <string name="brand_cashapp">Cash App</string>
+    <string name="brand_roblox">Roblox</string>
+    <string name="brand_spotify">Spotify</string>
+    <string name="brand_chime">Chime</string>
+    <string name="brand_telegram">Telegram</string>
+    <string name="brand_gmail">Gmail</string>
+    <string name="brand_facebook">Facebook</string>
     <string name="pin_shortcut">Pin shortcut</string>
 
     <!-- Widgets -->
